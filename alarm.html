@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<!-- ----------------------------------------------------------------------- -->
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Page-Enter" CONTENT="RevealTrans(Duration=1,Transition=23)">
+<!-- ---------------------------------
+016 ページの切り替え時に特殊効果をかける。
+トランジョンの効果の種類
+0-1     矩形が拡大・縮小する。
+2-3     円が拡大・縮小する。
+4-7     上下・左右にワイプする。
+8-9     縦・横にブラインドする。
+10-11   市松模様で切り替わる。
+12      細かい砂状に切り替わる。
+13-16   上下・左右から切り替わる。
+17-20   角から斜めに切り替わる。
+21-22   不規則な線で切り替わる。
+23       0-22をランダムに適用
+---------------------------------- -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+      window.resizeTo(500,350);
+      window.moveTo(500,0);
+// -->
+</script>
+
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>時間を扱う</title>
+</head>
+
+<body background="gif/backgr.gif" bgcolor="#FFFFFF" onload="Main_Start()">
+<script language="JavaScript"><!--
+//***************************************************
+//* Copyright 1997.1- By Yoshihiro Hashimoto        *
+//* この部分を残していただける場合のみ              *
+//* ソースはご自由にご使用ください。                *
+//***************************************************
+
+function Main_Start(){
+//***************************
+//*  処理の開始             *
+//*                         *
+//* 引数： Nothing          *
+//* 戻り： nothing          *
+//***************************
+
+  Time();//時間を表示させる
+  //デモ用の時間を記入する。現在の時刻の1分後
+  minute = minute+1;//1分後
+  now.setMinutes(minute);//1分後のセット これで時も日も自動で送られる。
+
+  document.fm2.Year.value = now.getYear()+1900;//年の表示
+  //NNは、99年の次は2000、IEは99の次が100の為、上の式が違う。NNは3900年になるので、対策
+  if  (document.fm2.Year.value > 2500){
+      document.fm2.Year.value = document.fm2.Year.value -1900;
+  }
+  document.fm2.Month.value = now.getMonth()+1;//月の表示 仕様で1月は0のため、1を加算
+  document.fm2.Day.value = now.getDate();//日の表示
+  document.fm2.Hour.value = now.getHours();//時の表示
+  document.fm2.Minute.value = now.getMinutes();//分の表示 1分後
+  Alm_Start();//アラーム起動
+}
+
+
+function Alm_Start(){
+//***************************
+//*  アラーム処理の開始     *
+//*                         *
+//* 引数： nothing          *
+//* 戻り： nothing          *
+//***************************
+  Time();//時間をGetする
+  document.fm.watch.value = year +"年"+ month +"月"+ day +"日 "+ hour +"時"+ minute +"分"+ second +"秒";
+  //アラーム処理のチェックボックスがOnかを調べる
+  if (document.fm2.Hyouji.checked == true){
+       Check_Time();//時間の比較を行う。
+  }
+  setTimeout('Alm_Start()',1000);//1秒毎に繰り返し
+}
+
+function Check_Time(){
+//*********************************
+//*  アラーム指定時間との比較     *
+//*                               *
+//* 引数： nothing                *
+//* 戻り： nothing                *
+//*********************************
+
+  if (eval(document.fm2.Year.value) == year){
+    if (eval(document.fm2.Month.value) == month){
+      if (eval(document.fm2.Day.value) == day){
+         if (eval(document.fm2.Hour.value) == hour){
+            if (eval(document.fm2.Minute.value) == minute){
+                 //アラートウィンドーを開いて、メッセージの表示
+                 alert("「"+ document.fm2.Msg.value +"」の時間になりました！！");
+                 document.fm2.Hyouji.checked = false;//同一分は、再度メッセージが出ないようにするため
+                 window.close();
+            }
+         }
+      }
+    }
+  }
+}
+
+function Time(){
+//***************************
+//*  現在の時刻を表示       *
+//*                         *
+//* 引数： nothing          *
+//* 戻り： nothing          *
+//***************************
+
+
+   now = new Date();
+   year = now.getYear()+1900;
+   //NNは、99年の次は2000、IEは99の次が100の為、上の式が違う。NNは3900年になるので、対策
+   if  (year > 2500){
+      year = year -1900;
+   }
+   month = now.getMonth()+1;//仕様で1月は0のため、1を加算
+   day = now.getDate();
+   hour = now.getHours();
+   minute = now.getMinutes();
+   second = now.getSeconds();
+}
+// -->
+</script>
+        <form method="POST" name="fm">
+            <input type="text" size="36" name="watch">
+        </form>
+        <form method="POST" name="fm2">
+            <p align="left"><font color="#FF00FF"><strong>指定日時</strong></font>（この時間になると、アラームがでます）
+            <br>
+            <input type="text" size="5" name="Year">年<input
+            type="text" size="5" name="Month">月<input
+            type="text" size="5" name="Day">日<input type="text"
+            size="5" name="Hour">時<input type="text" size="5"
+            name="Minute">分<br>
+            <input type="checkbox" checked name="Hyouji"
+            value="ON"><font color="#FF00FF"><strong>アラームを使用する</strong></font>
+            </p>
+            <p align="left"><font color="#FF00FF"><strong>内容</strong></font>（この内容を表示します）<br>
+            <input type="text" size="54" name="Msg"
+            value="時間になった時に表示する文字です"></p>
+        </form>
+</center></div><div align="center"><center>
+
+</body>
+</html>

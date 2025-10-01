@@ -1,0 +1,71 @@
+div.bg
+{
+	position:	absolute;
+	left:		20px;
+	top:		20px;
+	z-index:	0;
+	margin:		0px;
+}
+
+div.mask
+{
+	position:	absolute;
+	left:		20px;
+	top:		20px;
+	z-index:	20;
+	margin:		0px;
+	visibility:	hidden;
+}
+
+div.actor
+{
+	position:	absolute;
+	left:		20px;
+	top:		20px;
+	z-index:	10;
+	width:		370px;
+	height:		300px;
+	margin:		0px 15px;
+}
+
+div.textfield
+{
+	position:	absolute;
+	left:		20px;
+	top:		20px;
+	z-index:	30;
+	width:		380px;
+	height:		280px;
+	margin:		10px;
+	color:				#FFFFFF;
+	font-size:			16px;
+	font-weight:		bold;
+	text-decoration:	none;
+}
+
+div.para
+{
+	position:	relative;
+	visibility:	hidden;
+}
+
+div.cover
+{
+	position:	absolute;
+	left:		20px;
+	top:		20px;
+	z-index:	100;
+	clip:		rect(0 400 300 0);
+}
+
+a:link, a:visited
+{
+	color:				#B0B0B0;
+	text-decoration:	none;
+}
+
+a:hover
+{
+	color:				#FFFFFF;
+	text-decoration:	none;
+}

@@ -1,0 +1,335 @@
+<HTML>
+<BODY onLoad="BGscroll(),yugami(),slideshow(),Realtime(),timerONE=window.setTimeout('scrollit_r2l(100)',500);" BACKGROUND="bg.gif" BGCOLOR="#00c5F5" >
+<!-- ---------------------------------
+キーワードとページの説明を埋め込む。
+---------------------------------- -->
+<META NAME="keywords"    COTENT ="個人, Zero1962, 趣味のソフトウェア">
+<META NAME="discription" CONTENT="趣味のソフトウェア研究成果を掲載しています">
+<!-- ---------------------------------------------------------------------- -->
+<HEAD>
+<title>Zero1962</title>
+</HEAD>
+<!-- ---------------------------------------------------------------------- -->
+
+<!-- ---------------------------------
+日よって文字を変える
+---------------------------------- -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+m = (new Date()).getMonth() + 1;
+d = (new Date()).getDate();
+if     ((m ==  1) && (d >=  1) && (d <= 7 )) document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>A Happy New Year!!</DIV>")
+else if((m ==  5) && (d == 23))              document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>Tatsunari's Birthday!</DIV>")
+else if((m ==  8) && (d == 17))              document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>Kumiko's and Kuniyuki's Birthday!</DIV>")
+else if((m == 10) && (d ==  2))              document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>Sahomi's Birthday!</DIV>")
+else if((m == 12) && (d == 24))              document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>Marry X'mas eve!</DIV>")
+else if((m == 12) && (d == 25))              document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>Marry X'mas!!</DIV>")
+else                                         document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>Welcome</DIV>")
+//-->
+</SCRIPT>
+
+<center>
+<h1>Zero1962's Room on @Nifty</h1>
+<!-- ---------------------------------
+ドキュメント最終更新日を得る
+---------------------------------- -->
+<script type="text/javascript"> document.write("Last modified："+document.lastModified); </script>
+</center>
+<hr>
+
+<!-- ---------------------------------
+背景スクロール
+--------------------------------- -->
+<SCRIPT LANGUAGE="VBScript">
+<!--
+dim x, y
+ y = 0
+ x = 0
+    
+Sub BGScroll()
+ y = y - 1
+ Document.all(document.body.sourceIndex).style.BackgroundPosition = x & " " & y
+End Sub
+
+Sub Window_Onload()
+ setInterval "BGScroll()",50
+End Sub
+//-->
+</SCRIPT> 
+
+<!-- ---------------------------------
+ページの切り替え時に特殊効果をかける。
+トランジョンの効果の種類
+0-1     矩形が拡大・縮小する。
+2-3     円が拡大・縮小する。
+4-7     上下・左右にワイプする。
+8-9     縦・横にブラインドする。
+10-11   市松模様で切り替わる。
+12      細かい砂状に切り替わる。
+13-16   上下・左右から切り替わる。
+17-20   角から斜めに切り替わる。
+21-22   不規則な線で切り替わる。
+23       0-22をランダムに適用
+META HTTP-EQUIV="Page-Enter" CONTENT="RevealTrans(Duration=1,Transition=23)"
+---------------------------------- -->
+<META HTTP-EQUIV="refresh" CONTENT="1800; HTTP-EQUIV="Page-Enter" CONTENT="RevealTrans(Duration=1,Transition=23)">
+
+<!-- ---------------------------------
+起動時の位置とサイズを指定する。
+---------------------------------- -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+    // window.resizeTo(600,750);
+    // window.moveTo(5,5);
+//-->
+</SCRIPT>
+
+<!-- ---------------------------------
+徐々に形を整形する文字列
+---------------------------------- -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+var count = 20
+function yugami()
+{
+  if(count > 0)
+  {
+    fusion.filters.wave.strength = count
+    count = count - 1
+    setTimeout("yugami()",5)
+  }
+}
+//-->
+</SCRIPT>
+
+<!-- ---------------------------------
+画像のランダム表示
+---------------------------------- -->
+<script language="JavaScript" src="jpg.js"></script>
+<TABLE BORDER="8" CELLSPACING="5" CELLPADDING="2" ><TR><TD>
+    <IMG src="./jpg/0.jpg" ID=img3 onClick="picchange()" BORDTER="1" WIDTH="300" HEIGHT="200" >
+</TD>
+</TR></TABLE>
+<div id="tokei">FigNo.nn Display interval=mm(s) --:--:--</div>
+<form name="form1">
+Display interval
+<input type="button" value="+" name="b+" onClick="speeddown()")>
+<input type="button" value="-" name="b-" onClick="speedup()")>
+FigNo.
+<input type="text" name="t1" size="3" value="70">
+<input type="button" value="ok" name="b1" onClick="checknum(t1.value);window.open('./jpg/'+t1.value+'.jpg','_brank')">
+<!-- input type="text" size="32" name="text1"  -->
+<input type="button" value="Zoom" name="b2" onClick="window.open('./jpg/'+n+'.jpg','_brank')">
+<input type="button" value="ｱﾗｰﾑ･ｾｯﾄ" name="b3" onClick="window.open('./alarm.html','Newwindow')">
+by Javascript
+</form>
+
+<FONT SIZE="6" FONT COLOR=GREEN>
+<a href="index.html"> Goto Japanese Page. </a><hr>
+</FONT>
+
+<!-- ---------------------------------
+マウス追従アニメ
+--------------------------------- -->
+<IMG SRC="heli_le.gif" STYLE="position:absolute;visibility:hidden;top:0;left:0" ID=img1>
+<IMG SRC="heli_ri.gif" STYLE="position:absolute;visibility:hidden;top:0;left:0" ID=img2>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+var x,y,oldx,oldy;
+document.onmousemove = heli_move
+ function heli_move(){
+ oldx=x;
+ oldy=y;
+ x=event.clientX;
+ y=event.clientY;
+  if(oldx<=x){
+   img1.style.visibility="hidden";
+   img2.style.visibility="visible";
+   img2.style.left=x -40 + document.body.scrollLeft;
+   img2.style.top=y+10 + document.body.scrollTop;
+  }
+  else{
+   img1.style.visibility="visible";
+   img2.style.visibility="hidden";
+   img1.style.left=x+10 + document.body.scrollLeft;
+   img1.style.top=y+10 + document.body.scrollTop;
+  }
+ }
+//-->
+</SCRIPT>
+
+<!-- ---------------------------------
+アニメーション
+---------------------------------- -->
+<MARQUEE DIRECTION="left" SCROLLDELAY="0" SCROLLAMOUNT="10"><IMG SRC="free_zero52h.png" WIDTH="93" HEIGHT="47"></MARQUEE>
+<MARQUEE DIRECTION="left" SCROLLDELAY="0" SCROLLAMOUNT="8" ><IMG SRC="free_zero21.png"  WIDTH="93" HEIGHT="47"></MARQUEE>
+<MARQUEE DIRECTION="left" SCROLLDELAY="0" SCROLLAMOUNT="5" ><IMG SRC="car1.gif"         WIDTH="93" HEIGHT="47"></MARQUEE>
+<hr>
+
+<!-- ---------------------------------
+ステータスエリアにテロップを流す。
+---------------------------------- -->
+<SCRIPT>
+/* Copyright (C)1996 Web Integration Systems, Inc. DBA Websys, Inc.
+   All Rights Reserved.
+   This applet can be re-used or modified, if credit is given in the source code.
+   We will not be held responsible for any unwanted effects due to the usage of this applet or any derivative.  No warrantees for usability 
+   for any specific application are given or implied.
+
+  Chris Skinner, January 30th, 1996.
+*/
+
+function scrollit_r2l(seed)
+{
+        var m1="best eforet.....";
+        var m2="Let's make my homepage!";
+
+        var msg=m1+m2;
+        var out = " ";
+        var c   = 1;
+        if (seed > 100)
+        {
+                seed--;
+                var cmd="scrollit_r2l(" + seed + ")";
+                timerTwo=window.setTimeout(cmd,100);
+        }
+        else if (seed <= 100 && seed > 0)
+        {
+                for (c=0 ; c < seed ; c++)
+                {
+                        out+=" ";
+                }
+                out+=msg;
+                seed--;
+                var cmd="scrollit_r2l(" + seed + ")";
+                    window.status=out;
+                timerTwo=window.setTimeout(cmd,100);
+        }
+        else if (seed <= 0)
+        {
+                if (-seed < msg.length)
+                {
+                        out+=msg.substring(-seed,msg.length);
+                        seed--;
+                        var cmd="scrollit_r2l(" + seed + ")";
+                        window.status=out;
+                        timerTwo=window.setTimeout(cmd,100);
+                }
+                else
+                {
+                        window.status=" ";
+                        timerTwo=window.setTimeout("scrollit_r2l(100)",75);
+                }
+        }
+}
+</SCRIPT>
+
+<!-- ---------------------------------
+今日の情報表示
+---------------------------------- -->
+<script language="JavaScript" src="eaclock.js"></script>
+<script language="JavaScript" src="qreki.js" ></script>
+<script language="JavaScript" src="today.js" ></script>
+<hr>
+
+<!-- ---------------------------------------------------------------------- -->
+<h1>Welcome to the room of Zero1962</h1>
+<h1>I am currently building the AirCrafts Museum using VRML.</h1>
+<h1>Please check subpage No.7  3-dimensional aircraft display VRML.</h1>
+
+<!-- ---------------------------------
+入場記録、掲示板
+---------------------------------- -->
+You are a visitor of the <img src="http://hpcounter3.nifty.com/cgi-bin/counter.cgi?u=JBC01225&p=36&c=5">.<hr>
+<center>
+<FONT SIZE="12" FONT COLOR=PINK>
+<a href="http://hpcgi3.nifty.com/k-tsujimoto/board/board.cgi"><BLINK>Notebook / </BLINK></a>
+<a href="http://hpcgi3.nifty.com/k-tsujimoto/7.cgi"><BLINK>Footprints book </BLINK></a><br>
+<a href="http://zero1962.cocolog-nifty.com/workbox/"><BLINK>Windows to the soulzero1962</BLINK></a>
+</FONT>
+</center>
+
+<!-- ---------------------------------
+貼 る だ け . Ｎ Ｅ Ｔ
+---------------------------------- -->
+<SCRIPT TYPE="text/javascript" SRC="http://www.harudake.net/ita/bin/hariita.php?m=left&h=&idname=1203031976w" WIDTH=140 HEIGHT=105></SCRIPT><NOSCRIPT><div align="center" style="font-size:34px;">
+</div></NOSCRIPT>
+</center>
+<hr>
+
+<!-- ---------------------------------
+お気に入りの画像表示
+---------------------------------- -->
+<center>
+<a href="zero.jpg" target="_brank"><img src="zero.jpg" WIDTH=140 HEIGHT=105> </a><br>
+<a href="1.jpg"    target="_brank"><img src="1.jpg"    WIDTH=140 HEIGHT=105> </a>
+<a href="2.jpg"    target="_brank"><img src="2.jpg"    WIDTH=140 HEIGHT=105> </a>
+<a href="3.jpg"    target="_brank"><img src="3.jpg"    WIDTH=140 HEIGHT=105> </a>
+<a href="4.jpg"    target="_brank"><img src="4.jpg"    WIDTH=140 HEIGHT=105> </a>
+<a href="5.jpg"    target="_brank"><img src="5.jpg"    WIDTH=140 HEIGHT=105> </a>
+<hr>
+</center>
+
+<FONT SIZE="4" FONT COLOR=YELLOW>
+<!-- ----------------------------------------------------------------------- -->
+<OL type="1.">
+<!-- ---------------------------------------------------------------------- -->
+<LI><a href="vrml/index.html"    > 3-dimensional aircraft display VRML </a><hr>
+<!-- ---------------------------------------------------------------------- -->
+<LI><a href="fltsim/index.html"  > Flight simulator hobby </a><a href="zero.gif" ><IMG src="zero.gif" WIDTH="120" HEIGHT="40"></a><hr>
+<!-- ---------------------------------------------------------------------- -->
+<LI><a href="myhoby4/index.html" > Collection of miniatures hobby No.4</a><hr>
+<!-- ---------------------------------------------------------------------- -->
+<LI><a href="myhoby3/index.html" > Collection of miniatures hobby No.3</a><hr>
+<!-- ---------------------------------------------------------------------- -->
+<LI><a href="myhoby2/index.html" > Collection of miniatures hobby No.2</a><hr>
+<!-- ---------------------------------------------------------------------- -->
+<LI><a href="myhoby/index.html"  > Collection of miniatures hobby No.1</a><hr>
+<!-- ---------------------------------------------------------------------- -->
+<LI><a href="zii/index.html"     > Z-II of the hobby (motorcycle):I was unfortunately scrapped. </a><hr>
+<!-- ---------------------------------------------------------------------- -->
+<br>
+<LI> Click the "ok" to enter the (key word) watchword!!<br>
+<form>
+<input type="password" name="t1" size="20">
+<input type="button" value="ok" name="b1" onClick="window.open(t1.value+'/index.html')">
+</form>
+<hr>
+<!-- ---------------------------------------------------------------------- -->
+<LI> Hearing to Zero1962 Click here for<br>
+<OL type="a">
+<LI>Own home
+<a href=mailto:kuniyuki.tsujimoto1182@nifty.com>
+<b>            kuniyuki.tsujimoto1182@nifty.com </b></a><BR>
+<LI><a href="sendmail.html">Please hear so you can even e-mail from here.</a>
+</OL>
+<hr>
+<!-- ---------------------------------------------------------------------- -->
+<LI><a href="uranai.html">Corner of divination</a><hr>
+<!-- ---------------------------------------------------------------------- -->
+<LI><a href="mylink.html"> Link Introduction</a><hr>
+<!-- ---------------------------------------------------------------------- -->
+</OL>
+</FONT>
+
+
+<center>
+<IFRAME NAME="travel" SRC="WHATNEW.txt" Width="700px" HEIGHT="200px"></IFRAME>
+</center>
+
+<!-- ---------------------------------
+お気に入りに登録する専用ボタンを設置する。
+---------------------------------- -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+if ((navigator.appVersion.indexOf("MSIE") > 0) && (parseInt(navigator.appVersion) >= 4))
+{
+    document.write("<CENTER><INPUT TYPE='button' VALUE='お気に入りに追加' onClick='window.external.AddFavorite(location.href, document.title);'></CENTER>");
+}
+//-->
+</SCRIPT>
+
+<!-- ----------------------------------------------------------------------- -->
+</BODY>
+</HTML>
+
