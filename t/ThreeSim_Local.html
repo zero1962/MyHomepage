@@ -1,0 +1,2500 @@
+<!DOCTYPE html>
+<!-- --------------------------------------------------------------------------
+ThreeSim 3D model display software (Ver 1.3) 2016.11.11
+Coding by kuniyuki.tsujimoto
+@ 2016.10.22 using three.js and Quaternion
+
+-------------------------------------------------------------------------------
+Compiled unnecessary, without special 3D viewer, You can display any three-dimensional
+ models in only Web browser.
+The VRML Aircraft Museum There are data of a three-dimensional model VRML format of
+a lot of aircraft.
+By converting them into obj format in Blender, you can display all.
+You can view the three-dimensional display in WindowsPC / Mac / Linux / iOS terminal.
+
+-------------------------------------------------------------------------------
+kuniyuki.tsujimoto1182@nifty.com
+http://zero1962.world.coocan.jp/
+Please to follow me on FaceBook.
+
+-------------------------------------------------------------------------------
+◎良いところ：
+・特別な３Ｄ表示ビューアを必要としない。
+・iPhoneでもPCでも同じデータが表示できる。
+・コンパイル不要。
+・クオータニオンを使っているのでジンバルロックしない。
+・VRMLエアクラフト博物館のモデルは変換すれば全部表示可能。
+・お金がかからない。
+
+-------------------------------------------------------------------------------
+○使い方：
+・ボタンをクリックして操作します。1Click 加速, 2Click 巡行.
+・iOSの場合、画面をスライドして拡大縮小視点変更できます。
+・PCの場合、マウス操作で拡大縮小視点変更できます。
+・VRML/MMDのモデルは、BlenderでOBJ/MTL形式ファイルに変換することで表示できます。
+
+-------------------------------------------------------------------------------
+♪製品仕様：
+・z軸マイナス方向が機体軸方向正とする。画面奥行方向。
+・Three.js/WebGLを用いることで、PCでもiOSでも3Dを表示できる。
+・AI機体（ランダム飛行、飛行経路トレース）
+・GUIメニューのチェックリストで、表示項目のON/OFF設定する。
+・Three.jsのサンプルにある(ランダム地形、太陽、霧、鳥）風景描写を取り込む。
+・PC/iOSで数値表示ができる。
+
+-------------------------------------------------------------------------------
+□注意事項：
+・IE10以下では、動作しません。
+・OBJLoader/GUIMenuは、Webサーバ実行時有効です。
+・IE/chromeではOBJLoaderが使えません。FirefoxのみOK。
+・ローカルのIE/chromeで実行する場合は、OBJLoader/ModeMenuをコメントアウトしてください。
+
+-------------------------------------------------------------------------------
+△問題点：
+・速度ベクトルの座標変換が正しくない。Euler角90deg以上で符号が変わるYaw改善済。2016.11.10 解決
+・表示画素数の多いOBJモデルは、時々消えます。WebGLのキャッシュ拡大できるの？
+・地形データの色が、元のVRMLデータの通りにならない。
+・VRMLのようにプロペラを回せない。
+・OBJモデルのアニメ動作方法がわからない。MikuMikuAIのように。
+・JavaScriptといっても、Three.js/VRML/htmlで関数が違う？
+・コメント文が多いと起動／実行が遅くなる。( JavaScript はインタプリタだった？)
+
+-------------------------------------------------------------------------------
+▽その他：
+・改造再配布は、ご自身の責任でお願いします。
+・ご意見、ご質問は、上記にメール願います。
+・要望、アイデアをお待ちしております。
+
+-------------------------------------------------------------------------------
+◇履歴：
+2016.11.28 mon Textureのパスはsetpathで通るようになった。
+2016.11.12 sat FireFox最新版ならOBJLoaderがローカルPCで実行できる。
+2016.11.11 fri Ver 1.3
+2016.11.10 thu 自作クォータニオン関数による航法計算で問題解決できた。
+2016.11.10 thu 仕様追加
+2016.11.09 wed クォータニオン関数化
+2016.11.07 mon ランダム地形、太陽光、鳥の群れ、霧
+2016.11.01 tue 簡易機体形状、練習用飛行経路設定した。
+2016.10.30 sun Camera Lookup 成功。ｺｸﾋﾟｯﾄﾋﾞｭｰも改善し、MRJ90版も作成した。
+2016.10.29 sat 古いIE9/Chrom(on WindoesVista)では動作しない。
+2016.10.28 fri 数値表示できた。しかし、iOSでは表示できない。
+2016.10.22 Ver 1.0 新規コーディング
+
+--------------------------------------------------------------------------- -->
+<html lang="en">
+<title>RV-6A ThreeSim Ver 1.3</title>
+<head><meta charset="UTF-8" />
+<meta name="Description" content="jsdo.it - share JavaScript, HTML5 and CSS -" />
+<meta name="Keywords"  content="JavaScript,HTML5,CSS" />
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1" />
+
+<!-- --------------------------------------------------------------------------
+スタイル
+--------------------------------------------------------------------------- -->
+<style type="text/css">
+body {
+	background-color: rgb(0, 100, 100);
+	margin:  0;
+	padding: 0;
+	overflow: hidden;
+}
+
+div#canvas-frame{
+	border: none;
+	cursor: pointer;
+	height: 140px;
+	background-color: #EEEEEE;
+	max-width: 100%;
+}
+div#canvas-frame canvas{
+	max-width: 100%;
+	max-height: auto;
+}
+
+#info { position: absolute; top: 60px; left: 20px; font-size: 16px;}
+
+#lightButton {
+	position: absolute;
+	right: 10px;
+	top:   10px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#View_Button {
+	position: absolute;
+	right: 10px;
+	top:   70px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#STP_Button {
+	color: #FF0000;
+	position: absolute;
+	left:   120px;
+	bottom: 10px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#Go_Button {
+	color: #0000FF;
+	position: absolute;
+	left:  250px;
+	bottom: 10px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#Back_Button {
+	color: #0000FF;
+	position: absolute;
+	left:   10px;
+	bottom: 10px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#YR_Button {
+	color: #00FF00;
+	position: absolute;
+	left:  250px;
+	bottom: 80px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#YL_Button {
+	color: #00FF00;
+	position: absolute;
+	left:   10px;
+	bottom: 80px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#PU_Button {
+	color: #00FF00;
+	position: absolute;
+	left:   120px;
+	bottom: 160px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#PD_Button {
+	color: #00FF00;
+	position: absolute;
+	left:   120px;
+	bottom: 80px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#RR_Button {
+	color: #00FF00;
+	position: absolute;
+	left:  250px;
+	bottom: 160px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#RL_Button {
+	color: #00FF00;
+	position: absolute;
+	left:   10px;
+	bottom: 160px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+</style>
+<!-- --------------------------------------------------------------------------
+
+--------------------------------------------------------------------------- -->
+</head>
+<body onload="ValueMonitor();">
+<div id="canvas-frame"></div>
+<div id="container"></div>
+<div id="info">
+	ThreeSim is 3D model display software ( Ver 1.3 )<br>
+	coded by <a href="http://zero1962.world.coocan.jp/">
+	kuniyuki.tsujimoto(zero1962)</a> using three.js.<br>
+	Since 2016.10.22 sat<br>
+	<a href="./ThreeSim.txt"> You can see this source. </a><hr>
+</div>
+<input id= "lightButton" type="button" value="Light" onclick= "lightButtonHandler()">
+<input id= "View_Button" type="button" value="View"  onclick= "View_ButtonHandler()">
+<input id=  "STP_Button" type="button" value="STP"   onclick=  "STP_ButtonHandler()">
+<input id=   "Go_Button" type="button" value="Go"    onclick=   "Go_ButtonHandler()">
+<input id= "Back_Button" type="button" value="Bk"    onclick= "Back_ButtonHandler()">
+<input id=   "YR_Button" type="button" value="YR"    onclick=   "YR_ButtonHandler()">
+<input id=   "YL_Button" type="button" value="YL"    onclick=   "YL_ButtonHandler()">
+<input id=   "PU_Button" type="button" value="PU"    onclick=   "PU_ButtonHandler()">
+<input id=   "PD_Button" type="button" value="PD"    onclick=   "PD_ButtonHandler()">
+<input id=   "RR_Button" type="button" value="RR"    onclick=   "RR_ButtonHandler()">
+<input id=   "RL_Button" type="button" value="RL"    onclick=   "RL_ButtonHandler()">
+
+<!-- --------------------------------------------------------------------------
+関連 JavaScripts
+--------------------------------------------------------------------------- -->
+<script type="text/javascript" src="js/three.js">        	</script>
+<script type="text/javascript" src="js/ShadowMesh.js">   	</script>
+<script type="text/javascript" src="js/OrbitControls.js">	</script>
+<script type="text/javascript" src="js/DDSLoader.js">    	</script>
+<script type="text/javascript" src="js/MTLLoader.js">    	</script>
+<script type="text/javascript" src="js/OBJLoader.js">    	</script>
+<script type="text/javascript" src="js/VRMLLoader.js">   	</script>
+<script type="text/javascript" src="js/libs/stats.min.js">    	</script>
+<script type="text/javascript" src="js/spin.min.js">     	</script>
+<script type="text/javascript" src="js/dat.gui.min.js">  	</script>
+<script type="text/javascript" src="js/FirstPersonControls.js">	</script>
+<script type="text/javascript" src="js/ImprovedNoise.js">	</script>
+<script type="text/javascript" src="js/Detector.js">		</script>
+<script type="text/javascript" src="js/Projector.js">		</script>
+<script type="text/javascript" src="js/CanvasRenderer.js">	</script>
+<script type="text/javascript" src="js/Bird.js">		</script>
+<script type="text/javascript" src="js/SkyShader.js">		</script>
+
+<!-- --------------------------------------------------------------------------
+関連関数
+--------------------------------------------------------------------------- -->
+<script>
+var Boid = function() {
+	var vector = new THREE.Vector3(),
+	_acceleration, _width = 500, _height = 500, _depth = 200, _goal, _neighborhoodRadius = 100,
+	_maxSpeed = 4, _maxSteerForce = 0.1, _avoidWalls = false;
+	this.position = new THREE.Vector3();
+	this.velocity = new THREE.Vector3();
+	_acceleration = new THREE.Vector3();
+	
+	this.setGoal = function ( target ) {
+		_goal = target;
+	};
+	
+	this.setAvoidWalls = function ( value ) {
+		_avoidWalls = value;
+	};
+	
+	this.setWorldSize = function ( width, height, depth ) {
+		_width = width;
+		_height = height;
+		_depth = depth;
+	};
+	
+	this.run = function ( boids ) {
+		if ( _avoidWalls ) {
+			vector.set( - _width, this.position.y, this.position.z );
+			vector = this.avoid( vector );
+			vector.multiplyScalar( 5 );
+			_acceleration.add( vector );
+			
+			vector.set( _width, this.position.y, this.position.z );
+			vector = this.avoid( vector );
+			vector.multiplyScalar( 5 );
+			_acceleration.add( vector );
+			
+			vector.set( this.position.x, - _height, this.position.z );
+			vector = this.avoid( vector );
+			vector.multiplyScalar( 5 );
+			_acceleration.add( vector );
+			
+			vector.set( this.position.x, _height, this.position.z );
+			vector = this.avoid( vector );
+			vector.multiplyScalar( 5 );
+			_acceleration.add( vector );
+			
+			vector.set( this.position.x, this.position.y, - _depth );
+			vector = this.avoid( vector );
+			vector.multiplyScalar( 5 );
+			_acceleration.add( vector );
+			
+			vector.set( this.position.x, this.position.y, _depth );
+			vector = this.avoid( vector );
+			vector.multiplyScalar( 5 );
+			_acceleration.add( vector );
+		}
+		
+		if ( Math.random() > 0.5 ) {
+			this.flock( boids );
+		}
+		this.move();
+	};
+	
+	this.flock = function ( boids ) {
+		if ( _goal ) {
+			_acceleration.add( this.reach( _goal, 0.005 ) );
+		}
+		_acceleration.add( this.alignment ( boids ) );
+		_acceleration.add( this.cohesion  ( boids ) );
+		_acceleration.add( this.separation( boids ) );
+	};
+	
+	this.move = function () {
+		this.velocity.add( _acceleration );
+		var l = this.velocity.length();
+		
+		if ( l > _maxSpeed ) {
+			this.velocity.divideScalar( l / _maxSpeed );
+		}
+		this.position.add( this.velocity );
+		_acceleration.set( 0, 0, 0 );
+	};
+	
+	this.checkBounds = function () {
+		if ( this.position.x >   _width  ) this.position.x = - _width;
+		if ( this.position.x < - _width  ) this.position.x =   _width;
+		if ( this.position.y >   _height ) this.position.y = - _height;
+		if ( this.position.y < - _height ) this.position.y =   _height;
+		if ( this.position.z >   _depth  ) this.position.z = - _depth;
+		if ( this.position.z < - _depth  ) this.position.z =   _depth;
+	};
+	
+	this.avoid = function ( target ) {
+		var steer = new THREE.Vector3();
+		steer.copy( this.position );
+		steer.sub( target );
+		steer.multiplyScalar( 1 / this.position.distanceToSquared( target ) );
+		return steer;
+	};
+	
+	this.repulse = function ( target ) {
+		var distance = this.position.distanceTo( target );
+		if ( distance < 150 ) {
+			var steer = new THREE.Vector3();
+			steer.subVectors( this.position, target );
+			steer.multiplyScalar( 0.5 / distance );
+			_acceleration.add( steer );
+		}
+	};
+	
+	this.reach = function ( target, amount ) {
+		var steer = new THREE.Vector3();
+		steer.subVectors( target, this.position );
+		steer.multiplyScalar( amount );
+		return steer;
+	};
+	
+	this.alignment = function ( boids ) {
+		var boid, velSum = new THREE.Vector3(),
+		count = 0;
+		for ( var i = 0, il = boids.length; i < il; i++ ) {
+			if ( Math.random() > 0.6 ) continue;
+			boid = boids[ i ];
+			distance = boid.position.distanceTo( this.position );
+			if ( distance > 0 && distance <= _neighborhoodRadius ) {
+				velSum.add( boid.velocity );
+				count++;
+			}
+		}
+		
+		if ( count > 0 ) {
+			velSum.divideScalar( count );
+			var l = velSum.length();
+			if ( l > _maxSteerForce ) {
+				velSum.divideScalar( l / _maxSteerForce );
+			}
+		}
+		return velSum;
+	};
+	
+	this.cohesion = function ( boids ) {
+		var boid, distance,
+		posSum = new THREE.Vector3(),
+		steer = new THREE.Vector3(),
+		count = 0;
+		for ( var i = 0, il = boids.length; i < il; i ++ ) {
+			if ( Math.random() > 0.6 ) continue;
+			boid = boids[ i ];
+			distance = boid.position.distanceTo( this.position );
+			if ( distance > 0 && distance <= _neighborhoodRadius ) {
+				posSum.add( boid.position );
+				count++;
+			}
+		}
+		
+		if ( count > 0 ) {
+			posSum.divideScalar( count );
+		}
+		
+		steer.subVectors( posSum, this.position );
+		var l = steer.length();
+		if ( l > _maxSteerForce ) {
+			steer.divideScalar( l / _maxSteerForce );
+		}
+		return steer;
+	};
+	
+	this.separation = function ( boids ) {
+		var boid, distance,
+		posSum = new THREE.Vector3(),
+		repulse = new THREE.Vector3();
+		for ( var i = 0, il = boids.length; i < il; i ++ ) {
+			if ( Math.random() > 0.6 ) continue;
+			boid = boids[ i ];
+			distance = boid.position.distanceTo( this.position );
+			if ( distance > 0 && distance <= _neighborhoodRadius ) {
+				repulse.subVectors( this.position, boid.position );
+				repulse.normalize();
+				repulse.divideScalar( distance );
+				posSum.add( repulse );
+			}
+		}
+		return posSum;
+	}
+}
+</script>
+
+<!-- ----------------------------------------------------------------------- -->
+<script type="text/javascript">
+if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+/*------------------------------------------------------------------------------
+JavaScript  グローバル変数宣言
+------------------------------------------------------------------------------*/
+var clock = new THREE.Clock();
+var frameTime = 0;
+var Time = 0;
+var stats;
+var controls, controls1, controls2, controls3;
+//
+var renderer = new THREE.WebGLRenderer({antialias: true});
+var scene = new THREE.Scene();
+scene.fog = new THREE.Fog( 0x303030, 300, 2000 );
+var SCREEN_WIDTH  = window.innerWidth;
+var SCREEN_HEIGHT = window.innerHeight;
+var activeCamera;
+var camera   = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 500000 );
+var camera1  = new THREE.PerspectiveCamera( 60, SCREEN_WIDTH / SCREEN_HEIGHT, 0.098, 500000 );
+var camera1a = new THREE.PerspectiveCamera( 60, SCREEN_WIDTH / SCREEN_HEIGHT, 0.098, 500000 );
+var camera1b = new THREE.PerspectiveCamera( 60, SCREEN_WIDTH / SCREEN_HEIGHT, 0.098, 500000 );
+var camera2  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 500000 );
+var camera3  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 500000 );
+var camera4  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 500000 );
+var camera5  = new THREE.PerspectiveCamera( 60, SCREEN_WIDTH / SCREEN_HEIGHT, 0.098, 500000 );
+var camera6  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 500000 );
+//
+var sunLight = new THREE.DirectionalLight( 'rgb(255,255,255)', 1 );
+var useDirectionalLight = true;
+var lightSphere, lightHolder;
+var lightPosition4D = new THREE.Vector4();
+//
+var normalVector = new THREE.Vector3( 0, 1, 0 );
+var planeConstant = 0.01;
+var groundMesh;
+var groundPlane = new THREE.Plane( normalVector, planeConstant );
+//
+var View_BTN_No 	= 0;
+var  STP_BTN_Status 	= true;
+var   Go_BTN_Status 	= true;
+var Back_BTN_Status 	= true;
+var   YR_BTN_Status 	= true;
+var   YL_BTN_Status 	= true;
+var   PU_BTN_Status 	= true;
+var   PD_BTN_Status 	= true;
+var   RR_BTN_Status 	= true;
+var   RL_BTN_Status 	= true;
+var rad_Yaw 		= 0.0;
+var rad_Pitch 		= 0.0;
+var rad_Roll 		= 0.0;
+//
+var FLD;
+var grid,  axis_n,  axis_v;
+var Tmesh;
+var Lmesh;
+var Torus;
+var Torus1;
+var Torus2;
+var Torus3;
+var Torus4;
+var Torus5;
+var Torus6;
+var Torus7;
+var Torus8;
+var Torus9;
+var Torus10;
+var Torus11;
+var Torus12;
+var Torus13;
+var Torus14;
+var Torus15;
+var Torus16;
+var Torus17;
+var Torus18;
+var Torus19;
+var Torus20;
+var Torus21;
+var Torus22;
+var Torus23;
+var Torus24;
+var Torus25;
+var Torus26;
+var Torus27;
+var Torus28;
+var Torus29;
+var mesh  = new THREE.Group();
+var mesha = new THREE.Group();
+var meshb = new THREE.Group();
+var meshc = new THREE.Group();
+var meshd = new THREE.Group();
+var meshShadow;
+var meshaShadow;
+var meshbShadow;
+var meshcShadow;
+var meshdShadow;
+var Cockpit;
+var Cockpita;
+var Cockpitb;
+var Cockpitc;
+//
+var valueNode,valueNode1,valueNode2,valueNode3;
+var birds, bird;
+var sky, sunSphere;
+var lastTime = (new Date()).getTime();
+//
+var X_axis  = new THREE.Vector3( 1,  0,  0 ).normalize();
+var Y_axis  = new THREE.Vector3( 0,  1,  0 ).normalize();
+var Z_axis  = new THREE.Vector3( 0,  0,  1 ).normalize();
+var Qaxis   = new THREE.Quaternion();
+var Qbuff   = new THREE.Quaternion();
+var target  = new THREE.Quaternion();
+var targetc = new THREE.Quaternion();
+var targetd = new THREE.Quaternion();
+var Qmodel  = new THREE.Quaternion();
+var Qmodelc = new THREE.Quaternion();
+var Qmodeld = new THREE.Quaternion();
+var Qviewc  = new THREE.Quaternion();
+var Qviewd  = new THREE.Quaternion();
+var P       = new THREE.Vector3( 0,  1, 3 );
+var Pc      = new THREE.Vector3( 0,  1, 3 );
+var Pd      = new THREE.Vector3( 0,  0,  0 );
+var A_b     = new THREE.Vector3( 0,  0,  0 );  // 機体姿勢
+var Ac_b    = new THREE.Vector3( 0,  0,  0 );  // 機体姿勢
+var Ad_b    = new THREE.Vector3( 0,  0,  0 );  // 機体姿勢
+var V       = new THREE.Vector3( 0,  0,  0 );  // 速度
+var Vc      = new THREE.Vector3( 0,  0,  0 );  // 速度
+var Vd      = new THREE.Vector3( 0,  0,  0 );  // 速度
+var Av_b    = new THREE.Vector3( 0,  0,  0 );  // 機体座標系角速度
+var Acv_b   = new THREE.Vector3( 0,  0,  0 );  // 機体座標系角速度
+var Adv_b   = new THREE.Vector3( 0,  0,  0 );  // 機体座標系角速度
+//
+var DCM_bL  = [ 0, 0, 0,
+	 	0, 0, 0,
+		0, 0, 0 ];
+var DCM_AI1 = [ 0, 0, 0,
+	 	0, 0, 0,
+		0, 0, 0 ];
+var DCM_AI2 = [ 0, 0, 0,
+	 	0, 0, 0,
+		0, 0, 0 ];
+
+/*------------------------------------------------------------------------------
+JavaScript  関数構成
+------------------------------------------------------------------------------*/
+init(); // 初期化処理
+loop(); // 周期処理
+
+/*------------------------------------------------------------------------------
+JavaScript  初期化処理
+------------------------------------------------------------------------------*/
+function init() {
+//
+	document.getElementById('canvas-frame').appendChild ( renderer.domElement );
+	container = document.getElementById( 'container' );
+
+// Rendering
+	renderer.setSize       ( SCREEN_WIDTH, SCREEN_HEIGHT );
+	renderer.setClearColor ( 'rgb(0,150,255)' );
+	renderer.setPixelRatio ( window.devicePixelRatio );
+	window.addEventListener( 'resize' , onWindowResize, false );
+	onWindowResize();
+
+// Add Sky Mesh
+	sky = new THREE.Sky();
+	scene.add( sky.mesh );
+
+// Add Sun Helper
+	sunSphere = new THREE.Mesh(
+		new THREE.SphereBufferGeometry( 20, 16, 8 ),
+		new THREE.MeshBasicMaterial( { color: 0xffffff } )
+	);
+	sunSphere.position.y           = -600;
+	sunSphere.visible              = false;
+	var distance                   = 600;
+	var uniforms                   = sky.uniforms;
+	uniforms.turbidity.value       = 10;
+	uniforms.reileigh.value        = 1;
+	uniforms.luminance.value       = 1;
+	uniforms.mieCoefficient.value  = 0.005;
+	uniforms.mieDirectionalG.value = 0.8;
+	var theta =     Math.PI * ( -0.15 - 0.5 );  // elevation / inclination   0.49 夜明け
+	var phi   = 2 * Math.PI * (  0.17 - 0.5 );  // Facing front              0.25
+	sunSphere.position.x = distance * Math.cos( phi );
+	sunSphere.position.y = distance * Math.sin( phi ) * Math.sin( theta );
+	sunSphere.position.z = distance * Math.sin( phi ) * Math.cos( theta );
+	sunSphere.visible    = false;
+	sky.uniforms.sunPosition.value.copy( sunSphere.position );
+	scene.add( sunSphere );
+
+// Light
+	sunLight.position.x = sunSphere.position.x;
+	sunLight.position.y = sunSphere.position.y;
+	sunLight.position.z = sunSphere.position.z;
+	sunLight.lookAt( scene.position );
+	scene.add( sunLight );
+	lightPosition4D.x = sunLight.position.x;
+	lightPosition4D.y = sunLight.position.y;
+	lightPosition4D.z = sunLight.position.z;
+	lightPosition4D.w = 0.001;
+
+// GROUND
+	var groundGeometry = new THREE.BoxGeometry( 8, 0.01, 100 );
+	var groundMaterial = new THREE.MeshLambertMaterial( { color: 'rgb(130,130,130)' } );
+	groundMesh = new THREE.Mesh( groundGeometry, groundMaterial );
+	groundMesh.position.z = -30.0;
+	scene.add( groundMesh );
+
+//GridHelper作成
+	grid = new THREE.GridHelper(100, 100);
+	grid.material.color = new THREE.Color( 0x00cccc);
+	scene.add(grid);
+
+//AxisHelper作成
+	axis_n = new THREE.AxisHelper(100);
+	scene.add(axis_n);
+	axis_v = new THREE.AxisHelper(10);
+	var Qaxis = axis_v.quaternion;
+	scene.add(axis_v);
+
+// XHR リクエスト
+	var onProgress = function ( xhr ) {
+		if ( xhr.lengthComputable ) {
+			var percentComplete = xhr.loaded / xhr.total * 100;
+			console.log( Math.round(percentComplete, 2) + '% downloaded' );
+		}
+	};
+	var onError = function ( xhr ) { };
+	THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath( 'mmd/' );
+/*
+// 地形(神戸空港)
+	mtlLoader.load( 'kobe.mtl', function( materials ) {
+		materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials( materials );
+		objLoader.setPath( 'mmd/' );
+		objLoader.load( 'kobe.obj', function ( object ) {
+			object.scale.set( 0.1, 0.1, 0.1 );
+			object.position.set( 500, 0, -450 );
+			object.rotation.set( 0, 1.48, 0 );
+			FLD = object;
+			scene.add( FLD );
+		}, onProgress, onError );
+	});
+
+
+// Cockpit
+	var manager = new THREE.LoadingManager();
+	manager.onProgress = function ( item, loaded, total ) {
+		console.log( item, loaded, total );
+	};
+	var tex = new THREE.Texture();
+	var texLoader = new THREE.ImageLoader( manager );
+	texLoader.setPath( 'mmd/' );
+	texLoader.load( 'rv6a-c.png', function ( image ) {
+		tex.image = image;
+		tex.needsUpdate = true;
+	} );
+	var CockpitGeometry = new THREE.BoxGeometry( 0.8, 0.38, 0.01 );
+	var CockpitMaterial = new THREE.MeshLambertMaterial ( { color: 'rgb(256,256,256)' } );
+	Cockpit = new THREE.Mesh( CockpitGeometry, CockpitMaterial );
+	Cockpit.traverse( function ( child ) {
+		if ( child instanceof THREE.Mesh ) {
+				child.material.map = tex;
+		}
+	} );
+	Cockpit.scale.set(  1,  1,  1 );
+	Cockpit.position.set  ( 0, 0.2, -0.005 );
+	
+	Cockpita = new THREE.Mesh( CockpitGeometry, CockpitMaterial );
+	Cockpita.traverse( function ( child ) {
+		if ( child instanceof THREE.Mesh ) {
+				child.material.map = tex;
+		}
+	} );
+	Cockpita.scale.set(  1,  1,  1 );
+	Cockpita.position.set  ( 0, 0.2, -0.005 );
+	
+	Cockpitb = new THREE.Mesh( CockpitGeometry, CockpitMaterial );
+	Cockpitb.traverse( function ( child ) {
+		if ( child instanceof THREE.Mesh ) {
+				child.material.map = tex;
+		}
+	} );
+	Cockpitb.scale.set(  1,  1,  1 );
+	Cockpitb.position.set  ( 0, 0.2, -0.005 );
+	
+	Cockpitc = new THREE.Mesh( CockpitGeometry, CockpitMaterial );
+	Cockpitc.traverse( function ( child ) {
+		if ( child instanceof THREE.Mesh ) {
+				child.material.map = tex;
+		}
+	} );
+	Cockpitc.scale.set(  1,  1,  1 );
+	Cockpitc.position.set  ( 0, 0.2, -0.005 );
+
+// OBJモデル(Savoia21)
+	mtlLoader.load( 'savoia21.mtl', function( materials ) {
+		materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials( materials );
+		objLoader.setPath( 'mmd/' );
+		objLoader.load( 'savoia21.obj', function ( object ) {
+			object.scale.set( 0.1, 0.1, 0.1 );
+			mesh.add(object);
+			mesh.add(camera1);
+			meshShadow = new THREE.ShadowMesh( mesh );
+			scene.add( mesh );
+			scene.add( meshShadow );
+			Qbuff = mesh.quaternion;
+		}, onProgress, onError );
+	});
+	mtlLoader.load( 'savoia21F.mtl', function( materials ) {
+		materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials( materials );
+		objLoader.setPath( 'mmd/' );
+		objLoader.load( 'savoia21.obj', function ( object ) {
+			object.scale.set( 0.1, 0.1, 0.1 );
+			mesha.add(object);
+			mesha.add(camera1a);
+			meshaShadow = new THREE.ShadowMesh( mesha );
+		}, onProgress, onError );
+	});
+	mtlLoader.load( 'savoia21F.mtl', function( materials ) {
+		materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials( materials );
+		objLoader.setPath( 'mmd/' );
+		objLoader.load( 'savoia21.obj', function ( object ) {
+			object.scale.set( 0.1, 0.1, 0.1 );
+			meshb = object;
+			meshb.add(meshb);
+			meshb.add(camera1b);
+			meshbShadow = new THREE.ShadowMesh( meshb );
+		}, onProgress, onError );
+	});
+	mtlLoader.load( 'mave.mtl', function( materials ) {
+		materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials( materials );
+		objLoader.setPath( 'mmd/' );
+		objLoader.load( 'mave.obj', function ( object ) {
+			object.scale.set( 0.05, 0.05, 0.05 );
+			meshc = object;
+			meshc.add(meshc);
+			meshc.add(camera5);
+			meshcShadow = new THREE.ShadowMesh( meshc );
+		}, onProgress, onError );
+	});
+	mtlLoader.load( 'catbus.mtl', function( materials ) {
+		materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials( materials );
+		objLoader.setPath( 'mmd/' );
+		objLoader.load( 'catbus.obj', function ( object ) {
+			object.scale.set( 0.05, 0.05, 0.05 );
+			meshd = object;
+			meshc.add(meshc);
+			meshdShadow = new THREE.ShadowMesh( meshd );
+		}, onProgress, onError );
+	});
+*/
+	axis_v.position.set( 0, 1, 3 );
+	axis_v.rotation.set( 0, 0, 0 );
+
+//  飛行経路と誘導リング
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, wireframe:false,transparent: true, opacity: 0.3 } );
+	Torus   = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus1  = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+      	Torus2  = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+      	Torus3  = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+      	Torus4  = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+      	Torus5  = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+      	Torus6  = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus7  = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus8  = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus9  = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus10 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus11 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus12 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus13 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus14 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus15 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus16 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus17 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus18 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus19 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus20 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus21 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus22 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus23 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus24 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus25 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus26 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus27 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus28 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus29 = new THREE.Mesh( new THREE.TorusGeometry( 5, 0.2, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus.position.set (    0,  0,    0 );Torus.rotation.set (  0, 0, 0 );
+	Torus1.position.set(    0,  0,  -20 );Torus1.rotation.set(  0, 0, 0 );
+	Torus2.position.set(    0, 10, -100 );Torus2.rotation.set(  0, 0, 0 );
+	Torus3.position.set(    0, 20, -150 );Torus3.rotation.set(  0, 0, 0 );
+	Torus4.position.set(    0, 30, -200 );Torus4.rotation.set(  0, 0, 0 );
+	Torus5.position.set(    0, 40, -250 );Torus5.rotation.set(  0, 0, 0 );
+	Torus6.position.set(    0, 50, -300 );Torus6.rotation.set(  0, 0, 0 );
+	Torus7.position.set(    0, 50, -350 );Torus7.rotation.set(  0, 0, 0 );
+	Torus8.position.set(   10, 50, -400 );Torus8.rotation.set(  0, 0, 0 );
+	Torus9.position.set(   20, 50, -450 );Torus9.rotation.set(  0, 0, 0 );
+	Torus10.position.set(  30, 50, -500 );Torus10.rotation.set( 0, 0, 0 );
+	Torus11.position.set(  40, 50, -450 );Torus11.rotation.set( 0, 0, 0 );
+	Torus12.position.set(  50, 50, -400 );Torus12.rotation.set( 0, 0, 0 );
+	Torus13.position.set(  60, 50, -300 );Torus13.rotation.set( 0, 0, 0 );
+	Torus14.position.set(  60, 50, -100 );Torus14.rotation.set( 0, 0, 0 );
+	Torus15.position.set(  60, 50,    0 );Torus15.rotation.set( 0, 0, 0 );
+	Torus16.position.set(  60, 50,  100 );Torus16.rotation.set( 0, 0, 0 );
+	Torus17.position.set(  60, 50,  300 );Torus17.rotation.set( 0, 0, 0 );
+	Torus18.position.set(  50, 50,  400 );Torus18.rotation.set( 0, 0, 0 );
+	Torus19.position.set(  40, 50,  450 );Torus19.rotation.set( 0, 0, 0 );
+	Torus20.position.set(  30, 50,  500 );Torus20.rotation.set( 0, 0, 0 );
+	Torus21.position.set(  20, 50,  450 );Torus21.rotation.set( 0, 0, 0 );
+	Torus22.position.set(  10, 50,  400 );Torus22.rotation.set( 0, 0, 0 );
+	Torus23.position.set(   0, 50,  350 );Torus23.rotation.set( 0, 0, 0 );
+	Torus24.position.set(   0, 50,  300 );Torus24.rotation.set( 0, 0, 0 );
+	Torus25.position.set(   0, 40,  250 );Torus25.rotation.set( 0, 0, 0 );
+	Torus26.position.set(   0, 30,  200 );Torus26.rotation.set( 0, 0, 0 );
+	Torus27.position.set(   0, 20,  150 );Torus27.rotation.set( 0, 0, 0 );
+	Torus28.position.set(   0, 10,  100 );Torus28.rotation.set( 0, 0, 0 );
+	Torus29.position.set(   0,  0,   20 );Torus29.rotation.set( 0, 0, 0 );
+	scene.add( Torus );
+	scene.add( Torus1 );
+	scene.add( Torus2 );
+	scene.add( Torus3 );
+	scene.add( Torus4 );
+	scene.add( Torus5 );
+	scene.add( Torus6 );
+	scene.add( Torus7 );
+	scene.add( Torus8 );
+	scene.add( Torus9 );
+	scene.add( Torus10 );
+	scene.add( Torus11 );
+	scene.add( Torus12 );
+	scene.add( Torus13 );
+	scene.add( Torus14 );
+	scene.add( Torus15 );
+	scene.add( Torus16 );
+	scene.add( Torus17 );
+	scene.add( Torus18 );
+	scene.add( Torus19 );
+	scene.add( Torus20 );
+	scene.add( Torus21 );
+	scene.add( Torus22 );
+	scene.add( Torus23 );
+	scene.add( Torus24 );
+	scene.add( Torus25 );
+	scene.add( Torus26 );
+	scene.add( Torus27 );
+	scene.add( Torus28 );
+	scene.add( Torus29 );
+
+// 線を引く
+	var Linematerial = new THREE.LineBasicMaterial( {
+		linewidth: 2,
+		color: 0xFF0000,
+		transparent: true,
+		opacity: 0.3
+	});
+	var Linegeometry = new THREE.Geometry();
+	Linegeometry.vertices.push( new THREE.Vector3(    0,   1,    0 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,   1,  -20 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  10, -100 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  20, -150 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  30, -200 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  40, -250 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  50, -300 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  50, -350 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   10,  50, -400 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   20,  50, -450 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   30,  50, -500 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   40,  50, -450 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   50,  50, -400 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   60,  50, -300 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   60,  50, -100 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   60,  50,    0 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   60,  50,  100 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   60,  50,  300 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   50,  50,  400 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   40,  50,  450 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   30,  50,  500 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   20,  50,  450 ));
+	Linegeometry.vertices.push( new THREE.Vector3(   10,  50,  400 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  50,  350 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  50,  300 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  40,  250 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  30,  200 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  20,  150 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,  10,  100 ));
+	Linegeometry.vertices.push( new THREE.Vector3(    0,   0,   20 ));
+	Lmesh = new THREE.Line( Linegeometry, Linematerial );
+	scene.add( Lmesh );
+
+// 簡易機体形状
+	var verticesOfCube = 	[
+					0,   0, -6, -1,   0, 1,  1, 0,  1,
+					0, 0.2,  1,
+					0,   0,  0,  0, 0.4, 1,  0, 0, 0.5,
+				];
+	var indicesOfFaces = 	[
+					0, 2, 1,
+					0, 1, 3,
+					0, 3, 2,
+					1, 2, 3,
+					4, 5, 6,
+					4, 6, 5,
+				];
+
+// Model
+// Box	var meshGeometry = new THREE.BoxGeometry( 1, 1, 3 );
+	var meshGeometry = new THREE.PolyhedronGeometry ( verticesOfCube, indicesOfFaces, 10, 0 );
+	var meshMaterial = new THREE.MeshLambertMaterial ( { color: 'rgb(0,255,255)', emissive: 0x200000 } );
+	object = new THREE.Mesh( meshGeometry, meshMaterial );
+	mesh.add(object);
+	mesh.add(camera1);
+	mesh.scale.set( 0.3, 0.3, 0.3 );
+	mesh.position.set  ( 0, 1, 3 );
+	meshShadow = new THREE.ShadowMesh( mesh );
+
+// Model-A
+//	var meshGeometry = new THREE.CylinderGeometry( 1, 1, 3 );
+	var meshGeometry = new THREE.PolyhedronGeometry ( verticesOfCube, indicesOfFaces, 10, 0 );
+	var meshMaterial = new THREE.MeshLambertMaterial ( { color: 'rgb(0,0,255)', emissive: 0x200000 } );
+	object = new THREE.Mesh( meshGeometry, meshMaterial );
+	mesha.add(object);
+	mesha.add(camera1a);
+	mesha.scale.set( 0.3, 0.3, 0.3 );
+	mesha.position.set  ( 0, 1, 3 );
+	meshaShadow = new THREE.ShadowMesh( mesha );
+
+// Model-B
+// Box2	var meshGeometry = new THREE.BoxGeometry( 2, 0.2, 3 );
+	var meshGeometry = new THREE.PolyhedronGeometry ( verticesOfCube, indicesOfFaces, 10, 0 );
+	var meshMaterial = new THREE.MeshLambertMaterial ( { color: 'rgb(255,255,0)', emissive: 0x200000 } );
+	object = new THREE.Mesh( meshGeometry, meshMaterial );
+	meshb.add(object);
+	meshb.add(camera1b);
+	meshb.scale.set( 0.3, 0.3, 0.3 );
+	meshb.position.set  ( 0, 1, 3 );
+	meshbShadow = new THREE.ShadowMesh( meshb );
+
+// Model-C
+	var meshGeometry = new THREE.PolyhedronGeometry ( verticesOfCube, indicesOfFaces, 10, 0 );
+	var meshMaterial = new THREE.MeshLambertMaterial ( { color: 'rgb(0,200,0)', emissive: 0x200000 } );
+	object = new THREE.Mesh( meshGeometry, meshMaterial );
+	meshc.add(object);
+	meshc.add(camera5);
+	meshc.scale.set( 0.3, 0.3, 0.3 );
+	meshc.position.set  ( 0, 1, 3 );
+	meshcShadow = new THREE.ShadowMesh( meshc );
+
+// Model-D
+	var meshGeometry = new THREE.PolyhedronGeometry ( verticesOfCube, indicesOfFaces, 10, 0 );
+	var meshMaterial = new THREE.MeshLambertMaterial ( { color: 'rgb(255,0,0)', emissive: 0x200000 } );
+	object = new THREE.Mesh( meshGeometry, meshMaterial );
+	meshd.add(object);
+	meshd.scale.set( 0.3, 0.3, 0.3 );
+	meshd.rotation.set  ( -0.2,    0, 0 );
+	meshd.position.set  ( -50, 30, -50 );
+	meshdShadow = new THREE.ShadowMesh( meshd );
+
+// 機体座標軸
+	axis_v.position.set( 0, 1, 3 );
+
+// 機体初期位置
+	Pc.x =   0;
+	Pc.y =   1;
+	Pc.z =   3;
+	Pd.x = -50;
+	Pd.y =  30;
+	Pd.z = -50;
+
+//  ランダム地形
+	var worldWidth = 256, worldDepth = 256,
+	worldHalfWidth = worldWidth / 2, worldHalfDepth = worldDepth / 2;
+	var Tgeometry = new THREE.PlaneBufferGeometry( 4000, 4000, worldWidth - 1, worldDepth - 1 );
+	Tgeometry.rotateX( - Math.PI / 2 );
+	Tgeometry.rotateY(   Math.PI / 4 );
+	var Tvertices = Tgeometry.attributes.position.array;
+	data = generateHeight( worldWidth, worldDepth );
+	
+	for ( var i = 0, j = 0, l = Tvertices.length; i < l; i ++, j += 3 ) {
+		
+		Tvertices[ j + 1 ] = data[ i ] * 3 - 150;
+	}
+	texture = new THREE.CanvasTexture( generateTexture( data, worldWidth, worldDepth ) );
+	texture.wrapS = THREE.ClampToEdgeWrapping;
+	texture.wrapT = THREE.ClampToEdgeWrapping;
+	Tmesh = new THREE.Mesh( Tgeometry, new THREE.MeshBasicMaterial( { map: texture } ) );
+	Tmesh.position.x = 500;
+	scene.add( Tmesh );
+
+// Birds
+	birds = [];
+	boids = [];
+	
+	for ( var i = 0; i < 200; i ++ ) {
+		boid = boids[ i ] = new Boid();
+		boid.position.x = Math.random() * 400 - 200;
+		boid.position.y = Math.random() * 400 - 200;
+		boid.position.z = Math.random() * 400 - 200;
+		boid.velocity.x = Math.random() * 2 - 1;
+		boid.velocity.y = Math.random() * 2 - 1;
+		boid.velocity.z = Math.random() * 2 - 1;
+		boid.setAvoidWalls( true );
+		boid.setWorldSize( 500, 500, 400 );
+		bird = birds[ i ] = new THREE.Mesh( new Bird(), new THREE.MeshBasicMaterial( { color:Math.random() * 0xffffff, side: THREE.DoubleSide } ) );
+		bird.phase = Math.floor( Math.random() * 62.83 );
+		scene.add( bird );
+	}
+
+// Camera Window
+	camera .position.set(    0,   4,    15 );
+	camera2.position.set(  P.x,  P.y,  P.z );
+	camera3.position.set(    0,   15,   25 );
+	camera4.position.set( Pc.x, Pc.y, Pc.z );
+	camera6.position.set( Pd.x, Pd.y, Pd.z );
+	Qviewc = camera4.quaternion;
+	Qviewd = camera6.quaternion;
+	activeCamera = camera;
+
+// マウスコントローラー
+	controls = new THREE.OrbitControls ( camera,renderer.domElement);
+	controls.maxDistance = 1000;
+	controls.maxPolarAngle = Math.PI * 0.48;
+	
+	controls3 = new THREE.OrbitControls ( camera3,renderer.domElement);
+	controls3.maxDistance = 1000;
+	controls3.maxPolarAngle = Math.PI * 0.48;
+	
+// GUI  Menu
+	Menu = {};
+	Menu.Axis   = true;
+	Menu.Ground = true;
+	Menu.FLD1   = false;
+	Menu.FLD2   = true;
+	Menu.Bird   = true;
+	Menu.Ring   = true;
+	Menu.Line   = true;
+	Menu.AI1    = true;
+	Menu.AI2    = true;
+	Menu.Speed  = 0.1;
+	Menu.Zoom   = 0;
+
+// Remove when it runs at Local.
+/*
+	var gui = new dat.GUI();
+	gui.add( Menu, 'Axis'   ).onChange( function(){});
+	gui.add( Menu, 'Ground' ).onChange( function(){});
+	gui.add( Menu, 'FLD1'   ).onChange( function(){});
+	gui.add( Menu, 'FLD2'   ).onChange( function(){});
+	gui.add( Menu, 'Bird'   ).onChange( function(){});
+	gui.add( Menu, 'Ring'   ).onChange( function(){});
+	gui.add( Menu, 'Line'   ).onChange( function(){});
+	gui.add( Menu, 'AI1'    ).onChange( function(){});
+	gui.add( Menu, 'AI2'    ).onChange( function(){});
+	gui.add( Menu, 'Speed', -10, 10 );
+	gui.add( Menu, 'Zoom',  -10, 10 );
+*/
+// Remove when it runs at Local.
+	
+	scene.add( activeCamera );
+	
+// FPS 描画性能表示
+	stats = new Stats();
+	container.appendChild( stats.dom );
+
+// テキスト数値表示 1行目
+	var valueDiv = document.createElement( 'div' );
+	valueDiv.style.position = 'absolute';
+	valueDiv.style.top      = '200px';
+	valueDiv.style.right    = '0px';
+	valueDiv.style.width    = '300px';
+	valueDiv.style.height   = '200px';
+	valueDiv.style.fontSize = '15px';
+	valueDiv.style.color	= '#FFFF00';
+	container.appendChild( valueDiv );
+	valueNode  = document.createTextNode( '' );
+	valueDiv.appendChild( valueNode );
+
+// テキスト数値表示 2行目
+	var valueDiv1 = document.createElement( 'div' );
+	valueDiv1.style.position = 'absolute';
+	valueDiv1.style.top      = '215px';
+	valueDiv1.style.right    = '0px';
+	valueDiv1.style.width    = '300px';
+	valueDiv1.style.height   = '200px';
+	valueDiv1.style.fontSize = '15px';
+	valueDiv1.style.color	= '#00FF00';
+	container.appendChild( valueDiv1 );
+	valueNode1 = document.createTextNode( '' );
+	valueDiv1.appendChild( valueNode1 );
+
+// テキスト数値表示 3行目
+	var valueDiv2 = document.createElement( 'div' );
+	valueDiv2.style.position = 'absolute';
+	valueDiv2.style.top      = '230px';
+	valueDiv2.style.right    = '0px';
+	valueDiv2.style.width    = '300px';
+	valueDiv2.style.height   = '200px';
+	valueDiv2.style.fontSize = '15px';
+	valueDiv2.style.color	= '#00FF00';
+	container.appendChild( valueDiv2 );
+	valueNode2 = document.createTextNode( '' );
+	valueDiv2.appendChild( valueNode2 );
+
+// テキスト数値表示 4行目
+	var valueDiv3 = document.createElement( 'div' );
+	valueDiv3.style.position = 'absolute';
+	valueDiv3.style.top      = '245px';
+	valueDiv3.style.right    = '0px';
+	valueDiv3.style.width    = '300px';
+	valueDiv3.style.height   = '200px';
+	valueDiv3.style.fontSize = '15px';
+	valueDiv3.style.color	= '#00FF00';
+	container.appendChild( valueDiv3 );
+	valueNode3 = document.createTextNode( '' );
+	valueDiv3.appendChild( valueNode3 );
+}
+
+/*------------------------------------------------------------------------------
+JavaScript  周期処理
+------------------------------------------------------------------------------*/
+function loop() {
+	requestAnimationFrame( loop );
+	frameTime = clock.getDelta();
+	Time  += frameTime;
+
+/*----------------------------------------------------------------------------*/
+// モデル影更新
+	meshShadow.    update( groundPlane, lightPosition4D );
+	meshaShadow.   update( groundPlane, lightPosition4D );
+	meshbShadow.   update( groundPlane, lightPosition4D );
+	meshcShadow.   update( groundPlane, lightPosition4D );
+	meshdShadow.   update( groundPlane, lightPosition4D );
+
+/*----------------------------------------------------------------------------*/
+// デバッグ用数値表示( iOSでは表示されない )
+	document.getElementById( 'Q.w' ).value = Qmodel.w.toFixed(2);
+	document.getElementById( 'Q.x' ).value = Qmodel.x.toFixed(2);
+	document.getElementById( 'Q.y' ).value = Qmodel.y.toFixed(2);
+	document.getElementById( 'Q.z' ).value = Qmodel.z.toFixed(2);
+
+/*----------------------------------------------------------------------------*/
+// ボタン入力
+	if ( Go_BTN_Status && Back_BTN_Status )
+	{
+		;
+	}
+	
+	if ( !Go_BTN_Status )
+	{
+		V.z += Menu.Speed * frameTime * -1;
+	}
+	if ( !Back_BTN_Status )
+	{
+		V.z += Menu.Speed * frameTime;
+	}
+	
+	if ( !STP_BTN_Status )
+	{
+		V.z = 0;
+
+/*----------------------------------------------------------------------------*/
+// 簡易モデル用　リセット設定
+		P.x = 0;
+		P.y = 1;
+		P.z = 3;
+		mesh.rotation.set  (   0,    0, 0 );
+		mesh.position.set  (   0,    1, 3 );
+		mesha.rotation.set (   0,    0, 0 );
+		mesha.position.set (   0,    1, 3 );
+		meshb.rotation.set (   0,    0, 0 );
+		meshb.position.set (   0,    1, 3 );
+		meshc.rotation.set (   0,    0, 0 );
+		axis_v.rotation.set(   0,    0, 0 );
+		axis_v.position.set(   0,    1, 3 );
+		Pc.x            =   0;
+		Pc.y            =   1;
+		Pc.z            =   3;
+/*----------------------------------------------------------------------------*/
+		Qbuff = mesh.quaternion;
+		STP_BTN_Status 	= true;
+		Go_BTN_Status 	= true;
+		Back_BTN_Status = true;
+		YR_BTN_Status 	= true;
+		YL_BTN_Status 	= true;
+		PU_BTN_Status 	= true;
+		PD_BTN_Status 	= true;
+		RR_BTN_Status 	= true;
+		RL_BTN_Status 	= true;
+		rad_Yaw 	= 0.0;
+		rad_Pitch 	= 0.0;
+		rad_Roll 	= 0.0;
+		V.x             = 0.0;
+		V.y             = 0.0;
+		V.z             = 0.0;
+		A_b.x		= 0.0;
+		A_b.y		= 0.0;
+		A_b.z		= 0.0;
+	}
+
+/*----------------------------------------------------------------------------*/
+// AI1 自動飛行モデル 飛行パターン
+	Qmodelc = meshc.quaternion;
+	if (( Pc.z > -20 )&&( Pc.x == 0))
+	{
+		meshc.rotation.x = ( Math.PI / 180 ) * 0;
+		Acv_b.x          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.y = ( Math.PI / 180 ) * 0;
+		Acv_b.y          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.z = ( Math.PI / 180 ) * 0;
+		Acv_b.z          = ( Math.PI / 180 ) * 0;
+		Vc.z = Menu.Speed * frameTime * -150;
+	}
+	else if(( Pc.z > -100 )&&( Pc.x == 0))
+	{
+		meshc.rotation.x = ( Math.PI / 180 ) * 2;
+		Acv_b.x          = ( Math.PI / 180 ) * 2;
+		meshc.rotation.y = ( Math.PI / 180 ) * 0;
+		Acv_b.y          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.z = ( Math.PI / 180 ) * 0;
+		Acv_b.z          = ( Math.PI / 180 ) * 0;
+		Vc.z = Menu.Speed * frameTime * -150;
+	}
+	else if(( Pc.y < 50 )&&( Pc.x == 0))
+	{
+		meshc.rotation.x = ( Math.PI / 180 ) * 5;
+		Acv_b.x          = ( Math.PI / 180 ) * 5;
+		meshc.rotation.y = ( Math.PI / 180 ) * 0;
+		Acv_b.y          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.z = ( Math.PI / 180 ) * 0;
+		Acv_b.z          = ( Math.PI / 180 ) * 0;
+		Vc.z = Menu.Speed * frameTime * -150;
+	}
+	else if(( Pc.z < -250 )&&( Pc.z > -430 )&&( Pc.x < 30))
+	{
+		meshc.rotation.x = ( Math.PI / 180 ) * 0;
+		Acv_b.x          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.y = ( Math.PI / 180 ) * -2;
+		Acv_b.y          = ( Math.PI / 180 ) * -2;
+		meshc.rotation.z = ( Math.PI / 180 ) * 0;
+		Acv_b.z          = ( Math.PI / 180 ) * 0;
+		Vc.z = Menu.Speed * frameTime * -150;
+	}
+	else if(( Pc.x < 60 )&&( Pc.z < 400 ) && (Pc.y > 50))
+	{
+		meshc.rotation.x = ( Math.PI / 180 ) * 0;
+		Acv_b.x          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.y = ( Math.PI / 180 ) * -15;
+		Acv_b.y          = ( Math.PI / 180 ) * -15;
+		meshc.rotation.z = ( Math.PI / 180 ) * 0;
+		Acv_b.z          = ( Math.PI / 180 ) * 0;
+		Vc.z = Menu.Speed * frameTime * -150;
+	}
+	else if(( Pc.z > -400 )&&( Pc.z <= -100 )&&( Pc.x > 60 ) && ( Pc.y >50 ))
+	{
+		targetc.setFromAxisAngle( Z_axis, ( Math.PI / 180 ) * -5 );
+		Qmodelc.multiply(targetc);
+		Vc.z = Menu.Speed * frameTime * 150;
+	}
+	else if(( Pc.z <= 435 )&&( Pc.x > 60 ) && ( Pc.y >50 ))
+	{
+		meshc.rotation.x = ( Math.PI / 180 ) * 0;
+		Acv_b.x          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.y = ( Math.PI / 180 ) * 180;
+		Acv_b.y          = ( Math.PI / 180 ) * 180;
+		meshc.rotation.z = ( Math.PI / 180 ) * 0;
+		Acv_b.z          = ( Math.PI / 180 ) * 0;
+		Vc.z = Menu.Speed * frameTime * 150;
+	}
+	else if(( Pc.x > 0 ) && ( Pc.y > 50 ) && ( Pc.z > 435 ) )
+	{
+		meshc.rotation.x = ( Math.PI / 180 ) * 0;
+		Acv_b.x          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.y = ( Math.PI / 180 ) * -200;
+		Acv_b.y          = ( Math.PI / 180 ) * -200;
+		meshc.rotation.z = ( Math.PI / 180 ) * 0;
+		Acv_b.z          = ( Math.PI / 180 ) * 0;
+		Vc.z = Menu.Speed * frameTime * 150;
+	}
+	else if(( Pc.x < 0) && ( Pc.y < 1 ) && ( Pc.z > 0 ))
+	{
+		meshc.rotation.x = ( Math.PI / 180 ) * 0;
+		Acv_b.x          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.y = ( Math.PI / 180 ) * 0;
+		Acv_b.y          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.z = ( Math.PI / 180 ) * 0;
+		Acv_b.z          = ( Math.PI / 180 ) * 0;
+		Vc.z = Menu.Speed * frameTime * -150;
+	}
+	else
+	{
+		meshc.rotation.x = ( Math.PI / 180 ) * -2.85;
+		Acv_b.x          = ( Math.PI / 180 ) * -2.85;
+		meshc.rotation.y = ( Math.PI / 180 ) * 0;
+		Acv_b.y          = ( Math.PI / 180 ) * 0;
+		meshc.rotation.z = ( Math.PI / 180 ) * 0;
+		Acv_b.z          = ( Math.PI / 180 ) * 0;
+		Vc.z = Menu.Speed * frameTime * -150;
+	}
+	
+	Pc = meshc.position;
+	scene.add( meshc );
+	scene.add( meshcShadow );
+	
+// 航法計算 AI1
+	NavigationAI1();
+	if(( Pc.x < 0) && ( Pc.y < 1 ) && ( Pc.z > 0 ))
+	{
+		Pc.x  = 0;
+		Pc.y  = 1;
+	}
+
+/*----------------------------------------------------------------------------*/
+// AI2 自動飛行モデル　飛行パターン：定常旋回
+	Adv_b.y = Math.PI * ( -1 / 180);
+	Qmodeld = meshd.quaternion;
+	target.setFromAxisAngle( X_axis, ( Math.PI / 180 ) * 0.2 );
+	Qmodeld.multiply(target);
+	target.setFromAxisAngle( Y_axis, ( Math.PI / 180 ) * -0.5 );
+	Qmodeld.multiply(target);
+	
+	Vd.z = Menu.Speed * frameTime * -200;
+	Pd = meshd.position;
+	scene.add( meshd );
+	scene.add( meshdShadow );
+
+/*----------------------------------------------------------------------------*/
+// 航法計算 AI2
+	NavigationAI2();
+
+/*----------------------------------------------------------------------------*/
+// 機体モデル切り替え
+
+	if ( V.z == 0.0)    // 地上停止
+	{
+		Qmodel = mesh.quaternion;
+	}
+	else if( (P.x == 0.0) && (P.y < 1.5) && (P.z > 2.0) && (P.z < 3.0)) // 地上滑走
+	{
+		Qmodel = mesha.quaternion;
+		Qaxis  = axis_v.quaternion;
+		mesha.rotation.set ( 0, 0, 0 );
+		axis_v.rotation.set( 0, 0, 0 );
+		Qbuff = mesha.quaternion;
+	}
+	else if( P.y < 2.0) // 地上滑走
+	{
+		Qmodel = mesha.quaternion;
+		Qaxis  = axis_v.quaternion;
+	}
+	else                // 飛行状態
+	{
+		Qmodel = meshb.quaternion;
+	}
+
+/*----------------------------------------------------------------------------*/
+// モデル姿勢のクオータニオン設定
+	Qmodel.x = Qbuff.x;
+	Qmodel.y = Qbuff.y;
+	Qmodel.z = Qbuff.z;
+	Qmodel.w = Qbuff.w;
+	Qaxis    = axis_v.quaternion;
+
+/*----------------------------------------------------------------------------*/
+// ボタン操作による飛行制御
+	if ( rad_Pitch > 0.0 )
+	{
+		target.setFromAxisAngle( X_axis, ( Math.PI / 180 ) * 1 );
+		Qmodel.multiply(target);
+		Av_b.x = ( Math.PI / 180 ) * 1;
+	}
+	else if ( rad_Pitch < 0.0 )
+	{
+		target.setFromAxisAngle( X_axis, ( Math.PI / 180 ) * -1 );
+		Qmodel.multiply(target);
+		Av_b.x = ( Math.PI / 180 ) * -1;
+	}
+	else if ( rad_Pitch == 0.0 )
+	{
+		target.setFromAxisAngle( X_axis, ( Math.PI / 180 ) * 0 );
+		Qmodel.multiply(target);
+		Av_b.x = ( Math.PI / 180 ) * 0;
+	}
+	
+	if ( rad_Roll > 0.0 )
+	{
+		target.setFromAxisAngle( Z_axis, ( Math.PI / 180 ) * 1 );
+		Qmodel.multiply(target);
+		Av_b.z = ( Math.PI / 180 ) * 1;
+	}
+	else if ( rad_Roll < 0.0 )
+	{
+		target.setFromAxisAngle( Z_axis, ( Math.PI / 180 ) * -1 );
+		Qmodel.multiply(target);
+		Av_b.z = ( Math.PI / 180 ) * -1;
+	}
+	else if ( rad_Roll == 0.0 )
+	{
+		target.setFromAxisAngle( Z_axis, ( Math.PI / 180 ) * 0 );
+		Qmodel.multiply(target);
+		Av_b.z = ( Math.PI / 180 ) * 0;
+	}
+	
+	if ( rad_Yaw > 0.0 )
+	{
+		target.setFromAxisAngle( Y_axis, ( Math.PI / 180 ) * 1 );
+		Qmodel.multiply(target);
+		Av_b.y = ( Math.PI / 180 ) * 1;
+	}
+	else if ( rad_Yaw < 0.0 )
+	{
+		target.setFromAxisAngle( Y_axis, ( Math.PI / 180 ) * -1 );
+		Qmodel.multiply(target);
+		Av_b.y = ( Math.PI / 180 ) * -1;
+	}
+	else if ( rad_Yaw == 0.0 )
+	{
+		target.setFromAxisAngle( Y_axis, ( Math.PI / 180 ) * 0 );
+		Qmodel.multiply(target);
+		Av_b.y = ( Math.PI / 180 ) * 0;
+	}
+	
+	Qaxis.x = Qmodel.x;
+	Qaxis.y = Qmodel.y;
+	Qaxis.z = Qmodel.z;
+	Qaxis.w = Qmodel.w;
+	Qbuff.x = Qmodel.x;
+	Qbuff.y = Qmodel.y;
+	Qbuff.z = Qmodel.z;
+	Qbuff.w = Qmodel.w;
+	
+/*----------------------------------------------------------------------------*/
+// 航法計算
+	Navigation();
+	axis_v.position.x = P.x;
+	axis_v.position.y = P.y;
+	axis_v.position.z = P.z;
+
+/*----------------------------------------------------------------------------*/
+// 機体モデル表示切替
+	if ( V.z == 0.0)
+	{
+		mesh.position.x = P.x;
+		mesh.position.y = P.y;
+		mesh.position.z = P.z;
+		scene.add( mesh );
+		scene.add( meshShadow );
+		scene.remove( mesha );
+		scene.remove( meshb );
+		scene.remove( meshaShadow );
+		scene.remove( meshbShadow );
+	}
+	else if( P.y < 2.0)
+	{
+		mesha.position.x = P.x;
+		mesha.position.y = P.y;
+		mesha.position.z = P.z;
+		scene.add( mesha );
+		scene.add( meshaShadow );
+		scene.remove( mesh );
+		scene.remove( meshb );
+		scene.remove( meshbShadow );
+		scene.remove( meshShadow );
+	}
+	else
+	{
+		meshb.position.x = P.x;
+		meshb.position.y = P.y;
+		meshb.position.z = P.z;
+		scene.add( meshb );
+		scene.add( meshbShadow );
+		scene.remove( mesh );
+		scene.remove( mesha );
+		scene.remove( meshaShadow );
+		scene.remove( meshShadow );
+	}
+
+/*----------------------------------------------------------------------------*/
+// 地形、メッシュ、座標軸　表示設定
+	if( !Menu.Ground )
+	{
+		scene.remove( grid );
+		scene.remove( groundMesh );
+	}
+	else
+	{
+		scene.add( grid );
+		scene.add( groundMesh );
+	}
+	
+	if( !Menu.Axis )
+	{
+		scene.remove( axis_n );
+		scene.remove( axis_v );
+	}
+	else
+	{
+		scene.add( axis_n );
+		scene.add( axis_v );
+	}
+	
+	if( !Menu.FLD1 )
+	{
+		scene.remove( FLD );
+	}
+	else
+	{
+		scene.add( FLD );
+	}
+	
+	if( !Menu.FLD2 )
+	{
+		scene.remove( Tmesh );
+	}
+	else
+	{
+		scene.add( Tmesh );
+	}
+	
+	if( !Menu.AI1 )
+	{
+		scene.remove( meshc );
+		scene.remove( meshcShadow );
+	}
+	else
+	{
+		scene.add( meshc );
+		scene.add( meshcShadow );
+	}
+	
+	if( !Menu.AI2 )
+	{
+		scene.remove( meshd );
+		scene.remove( meshdShadow );
+	}
+	else
+	{
+		scene.add( meshd );
+		scene.add( meshdShadow );
+	}
+	
+	if( !Menu.Bird )
+	{
+		for ( var i = 0; i < 200; i ++ ) {
+			scene.remove( birds[ i ] );
+		}
+	}
+	else
+	{
+		for ( var i = 0; i < 200; i ++ ) {
+			scene.add( birds[ i ] );
+		}
+	}
+	
+	if( !Menu.Line )
+	{
+		scene.remove( Lmesh );
+	}
+	else
+	{
+		scene.add( Lmesh );
+	}
+	
+	if( !Menu.Ring )
+	{
+		scene.remove( Torus );
+		scene.remove( Torus1 );
+		scene.remove( Torus2 );
+		scene.remove( Torus3 );
+		scene.remove( Torus4 );
+		scene.remove( Torus5 );
+		scene.remove( Torus6 );
+		scene.remove( Torus7 );
+		scene.remove( Torus8 );
+		scene.remove( Torus9 );
+		scene.remove( Torus10 );
+		scene.remove( Torus11 );
+		scene.remove( Torus12 );
+		scene.remove( Torus13 );
+		scene.remove( Torus14 );
+		scene.remove( Torus15 );
+		scene.remove( Torus16 );
+		scene.remove( Torus17 );
+		scene.remove( Torus18 );
+		scene.remove( Torus19 );
+		scene.remove( Torus20 );
+		scene.remove( Torus21 );
+		scene.remove( Torus22 );
+		scene.remove( Torus23 );
+		scene.remove( Torus24 );
+		scene.remove( Torus25 );
+		scene.remove( Torus26 );
+		scene.remove( Torus27 );
+		scene.remove( Torus28 );
+		scene.remove( Torus29 );
+	}
+	else
+	{
+		scene.add( Torus );
+		scene.add( Torus1 );
+		scene.add( Torus2 );
+		scene.add( Torus3 );
+		scene.add( Torus4 );
+		scene.add( Torus5 );
+		scene.add( Torus6 );
+		scene.add( Torus7 );
+		scene.add( Torus8 );
+		scene.add( Torus9 );
+		scene.add( Torus10 );
+		scene.add( Torus11 );
+		scene.add( Torus12 );
+		scene.add( Torus13 );
+		scene.add( Torus14 );
+		scene.add( Torus15 );
+		scene.add( Torus16 );
+		scene.add( Torus17 );
+		scene.add( Torus18 );
+		scene.add( Torus19 );
+		scene.add( Torus20 );
+		scene.add( Torus21 );
+		scene.add( Torus22 );
+		scene.add( Torus23 );
+		scene.add( Torus24 );
+		scene.add( Torus25 );
+		scene.add( Torus26 );
+		scene.add( Torus27 );
+		scene.add( Torus28 );
+		scene.add( Torus29 );
+	}
+
+/*----------------------------------------------------------------------------*/
+// Camera mode.
+	if ( View_BTN_No == 0 )
+	{
+		camera.position.z = 10 + Menu.Zoom;
+		camera.lookAt( P );
+		activeCamera = camera;
+	}
+	else if ( View_BTN_No == 1 )
+	{
+		if ( V.z == 0.0)
+		{
+			camera1.position.x = 0;
+			camera1.position.y = 5;
+			camera1.position.z = 20 + Menu.Zoom;
+			activeCamera = camera1;
+		}
+		else if( P.y < 2.0)
+		{
+			camera1a.position.x =  0;
+			camera1a.position.y =  5;
+			camera1a.position.z =  20 + Menu.Zoom;
+			activeCamera = camera1a;
+		}
+		else
+		{
+			camera1b.position.x =  0;
+			camera1b.position.y =  5;
+			camera1b.position.z =  20 + Menu.Zoom;
+			activeCamera = camera1b;
+		}
+	}
+	else if ( View_BTN_No == 2 )
+	{
+		camera2.position.x = P.x;
+		camera2.position.y = P.y + 1.5;
+		camera2.position.z = P.z + 7 + Menu.Zoom;
+		activeCamera = camera2;
+	}
+	else if ( View_BTN_No == 3 )
+	{
+		activeCamera = camera3;
+	}
+	else if ( View_BTN_No == 4 )
+	{
+		camera4.position.x = Pc.x - 1;
+		camera4.position.y = Pc.y + 1.5;
+		camera4.position.z = Pc.z + 10 + Menu.Zoom;
+		activeCamera = camera4;
+	}
+	else if ( View_BTN_No == 5 )
+	{
+		camera5.position.x = 0;
+		camera5.position.y = 5;
+		camera5.position.z = 20 + Menu.Zoom;
+		activeCamera = camera5;
+	}
+	else if ( View_BTN_No == 6 )
+	{
+		camera6.position.x = Pd.x;
+		camera6.position.y = Pd.y + 1;
+		camera6.position.z = Pd.z + 10 + Menu.Zoom;
+		activeCamera = camera6;
+	}
+
+/*----------------------------------------------------------------------------*/
+// テキスト数値表示
+	valueNode.nodeValue  	=  'Time:' + Time.toFixed(2);
+	if ( View_BTN_No == 4 )
+	{
+		valueNode1.nodeValue 	=  'Pcx:' + Pc.x.toFixed(2) + 'Pcy:' + Pc.y.toFixed(2) + 'Pcz:' + (-Pc.z).toFixed(2);
+		valueNode2.nodeValue 	=  'Pitch:' + ((  A_b.x ) * 180.0 / Math.PI ).toFixed(2)
+					 + 'Yaw  :' + (( -A_b.y ) * 180.0 / Math.PI ).toFixed(2)
+					 + 'Roll :' + (( -A_b.z ) * 180.0 / Math.PI ).toFixed(2);
+		valueNode3.nodeValue 	=  'Vc.z:' + Vc.z.toFixed(2);
+	}
+	else if ( View_BTN_No == 5 )
+	{
+		valueNode1.nodeValue 	=  'Pd.x:' + Pd.x.toFixed(2) + 'Pd.y:' + Pd.y.toFixed(2) + 'Pd.z:' + (-Pd.z).toFixed(2);
+		valueNode2.nodeValue 	=  'Pitch:' + ((  A_b.x ) * 180.0 / Math.PI ).toFixed(2)
+					 + 'Yaw  :' + (( -A_b.y ) * 180.0 / Math.PI ).toFixed(2)
+					 + 'Roll :' + (( -A_b.z ) * 180.0 / Math.PI ).toFixed(2);
+		valueNode3.nodeValue 	=  'Vd.z:' + Vd.z.toFixed(2);
+	}
+	else if ( View_BTN_No == 6 )
+	{
+		valueNode1.nodeValue 	=  'Pd.x:' + Pd.x.toFixed(2) + 'Pd.y:' + Pd.y.toFixed(2) + 'Pd.z:' + (-Pd.z).toFixed(2);
+		valueNode2.nodeValue 	=  'Pitch:' + ((  A_b.x ) * 180.0 / Math.PI ).toFixed(2)
+					 + 'Yaw  :' + (( -A_b.y ) * 180.0 / Math.PI ).toFixed(2)
+					 + 'Roll :' + (( -A_b.z ) * 180.0 / Math.PI ).toFixed(2);
+		valueNode3.nodeValue 	=  'Vd.z:' + Vd.z.toFixed(2);
+	}
+	else
+	{
+		valueNode1.nodeValue 	=  'Px:' + P.x.toFixed(2) + 'Py:' + P.y.toFixed(2) + 'Pz:' + (-P.z).toFixed(2);
+		valueNode2.nodeValue 	=  'Pitch:' + ((  A_b.x ) * 180.0 / Math.PI ).toFixed(2)
+					 + 'Yaw  :' + (( -A_b.y ) * 180.0 / Math.PI ).toFixed(2)
+					 + 'Roll :' + (( -A_b.z ) * 180.0 / Math.PI ).toFixed(2);
+		valueNode3.nodeValue 	=  'Vz:' + V.z.toFixed(2);
+	}
+/*----------------------------------------------------------------------------*/
+// birds 表示
+	for ( var i = 0, il = birds.length; i < il; i++ ) {
+		boid = boids[ i ];
+		boid.run( boids );
+		bird = birds[ i ];
+		bird.position.copy( boids[ i ].position );
+		color = bird.material.color;
+		color.r = color.g = color.b = ( 500 - bird.position.z ) / 1000;
+		bird.rotation.y = Math.atan2( - boid.velocity.z, boid.velocity.x );
+		bird.rotation.z = Math.asin( boid.velocity.y / boid.velocity.length() );
+		bird.phase = ( bird.phase + ( Math.max( 0, bird.rotation.z ) + 0.1 )  ) % 62.83;
+		bird.geometry.vertices[ 5 ].y = bird.geometry.vertices[ 4 ].y = Math.sin( bird.phase ) * 5;
+	}
+/*----------------------------------------------------------------------------*/
+// 周期処理
+	renderer.render( scene, activeCamera );
+	stats.update();
+}
+
+/*----------------------------------------------------------------------------*/
+// 数値モニタ関数  iOSでは表示されない。
+/*----------------------------------------------------------------------------*/
+function ValueMonitor() {
+	label_Qw = document.createElement("label");
+	input_Qw = document.createElement("input");
+	label_Qw.innerHTML = "  <br />  Q.w = ";
+	document.body.appendChild(label_Qw);
+	     label_Qw.appendChild(input_Qw);
+	     input_Qw.id    = 'Q.w';
+	
+	label_Qx = document.createElement("label");
+	input_Qx = document.createElement("input");
+	label_Qx.innerHTML = "  <br />  Q.x = ";
+	document.body.appendChild(label_Qx);
+	     label_Qx.appendChild(input_Qx);
+	     input_Qx.id    = 'Q.x';
+	
+	label_Qy = document.createElement("label");
+	input_Qy = document.createElement("input");
+	label_Qy.innerHTML = "  <br />  Q.y = ";
+	document.body.appendChild(label_Qy);
+	     label_Qy.appendChild(input_Qy);
+	     input_Qy.id    = 'Q.y';
+	
+	label_Qz = document.createElement("label");
+	input_Qz = document.createElement("input");
+	label_Qz.innerHTML = "  <br />  Q.z = ";
+	document.body.appendChild(label_Qz);
+	     label_Qz.appendChild(input_Qz);
+	     input_Qz.id    = 'Q.z';
+}
+
+/*----------------------------------------------------------------------------*/
+// ウィンドウサイズ変更対応
+/*----------------------------------------------------------------------------*/
+function onWindowResize() {
+	SCREEN_WIDTH = window.innerWidth;
+	SCREEN_HEIGHT = window.innerHeight;
+	renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+	camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera.updateProjectionMatrix();
+	camera1.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera1.updateProjectionMatrix();
+	camera2.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera2.updateProjectionMatrix();
+	camera3.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera3.updateProjectionMatrix();
+	camera4.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera4.updateProjectionMatrix();
+	camera5.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera5.updateProjectionMatrix();
+	camera6.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera6.updateProjectionMatrix();
+}
+
+/*----------------------------------------------------------------------------*/
+// ライトスイッチ処理
+/*----------------------------------------------------------------------------*/
+function lightButtonHandler() {
+	useDirectionalLight = !useDirectionalLight;
+	if ( useDirectionalLight ) {
+		renderer.setClearColor( 'rgb(0,150,255)' );
+		groundMesh.material.color.set( 'rgb( 150,150,150 )' );
+		sunLight.position.set( 5, 7, - 1 );
+		sunLight.lookAt( scene.position );
+		lightPosition4D.x = sunLight.position.x;
+		lightPosition4D.y = sunLight.position.y;
+		lightPosition4D.z = sunLight.position.z;
+		lightPosition4D.w = 0.001; // more of a directional Light value
+		lightSphere.visible = false;
+		lightHolder.visible = false;
+		document.getElementById( 'lightButton' ).value = "Switch to PointLight" ;
+	} else {
+		renderer.setClearColor( 'rgb(0,0,0)' );
+		groundMesh.material.color.set( 'rgb (150,150,150)' );
+		sunLight.position.set( 0, 6, - 2 );
+		sunLight.lookAt( scene.position );
+		lightSphere.position.copy( sunLight.position );
+		lightHolder.position.copy( lightSphere.position );
+		lightHolder.position.y += 0.12;
+		lightPosition4D.x = sunLight.position.x;
+		lightPosition4D.y = sunLight.position.y;
+		lightPosition4D.z = sunLight.position.z;
+		lightPosition4D.w = 0.9; // more of a point Light value
+		lightSphere.visible = true;
+		lightHolder.visible = true;
+		document.getElementById( 'lightButton' ).value = "Switch to DirectionalLight" ;
+	}
+}
+
+/*----------------------------------------------------------------------------*/
+// ボタン処理
+/*----------------------------------------------------------------------------*/
+function View_ButtonHandler() {
+	View_BTN_No++;
+	View_BTN_No %= 7;
+}
+
+function STP_ButtonHandler() {
+	STP_BTN_Status = !STP_BTN_Status;
+}
+
+function Go_ButtonHandler() {
+	Go_BTN_Status = !Go_BTN_Status;
+}
+
+function Back_ButtonHandler() {
+	Back_BTN_Status = !Back_BTN_Status;
+}
+
+function YR_ButtonHandler() {
+	YR_BTN_Status = !YR_BTN_Status;
+	if ( YR_BTN_Status ) {
+		rad_Yaw = 0.0 ;
+	} else {
+		rad_Yaw = -1.0 ;
+	}
+}
+
+function YL_ButtonHandler() {
+	YL_BTN_Status = !YL_BTN_Status;
+	if ( YL_BTN_Status ) {
+		rad_Yaw = 0.0 ;
+	} else {
+		rad_Yaw = 1.0 ;
+	}
+}
+
+function PU_ButtonHandler() {
+	PU_BTN_Status = !PU_BTN_Status;
+	if ( PU_BTN_Status ) {
+		rad_Pitch = 0.0 ;
+	} else {
+		rad_Pitch = 1.0 ;
+	}
+}
+
+function PD_ButtonHandler() {
+	PD_BTN_Status = !PD_BTN_Status;
+	if ( PD_BTN_Status ) {
+		rad_Pitch = 0.0 ;
+	} else {
+		rad_Pitch = -1.0 ;
+	}
+}
+
+function RR_ButtonHandler() {
+	RR_BTN_Status = !RR_BTN_Status;
+	if ( RR_BTN_Status ) {
+		rad_Roll = 0.0 ;
+	} else {
+		rad_Roll = -1.0 ;
+	}
+}
+
+function RL_ButtonHandler() {
+	RL_BTN_Status = !RL_BTN_Status;
+	if ( RL_BTN_Status ) {
+		rad_Roll = 0.0 ;
+	} else {
+		rad_Roll = 1.0 ;
+	}
+}
+
+/*----------------------------------------------------------------------------*/
+// ランダム地形生成処理
+/*----------------------------------------------------------------------------*/
+function generateHeight( width, height ) {
+	var size = width * height, data = new Uint8Array( size ),
+	perlin = new ImprovedNoise(), quality = 1, z = Math.random() * 100;
+	for ( var j = 0; j < 4; j ++ ) {
+		for ( var i = 0; i < size; i ++ ) {
+			var x = i % width, y = ~~ ( i / width );
+			data[ i ] += Math.abs( perlin.noise( x / quality, y / quality, z ) * quality * 1.75 );
+		}
+		quality *= 5;
+	}
+	return data;
+}
+
+function generateTexture( data, width, height ) {
+	var canvas, canvasScaled, context, image, imageData,
+	level, diff, vector3, sun, shade;
+	vector3 = new THREE.Vector3( 0, 0, 0 );
+	sun = new THREE.Vector3( 1, 1, 1 );
+	sun.normalize();
+	canvas = document.createElement( 'canvas' );
+	canvas.width = width;
+	canvas.height = height;
+	context = canvas.getContext( '2d' );
+	context.fillStyle = '#000';
+	context.fillRect( 0, 0, width, height );
+	image = context.getImageData( 0, 0, canvas.width, canvas.height );
+	imageData = image.data;
+	for ( var i = 0, j = 0, l = imageData.length; i < l; i += 4, j ++ ) {
+		vector3.x = data[ j - 2 ] - data[ j + 2 ];
+		vector3.y = 2;
+		vector3.z = data[ j - width * 2 ] - data[ j + width * 2 ];
+		vector3.normalize();
+		shade = vector3.dot( sun );
+		imageData[ i ] = ( 96 + shade * 128 ) * ( 0.5 + data[ j ] * 0.007 );
+		imageData[ i + 1 ] = ( 32 + shade * 96 ) * ( 0.5 + data[ j ] * 0.007 );
+		imageData[ i + 2 ] = ( shade * 96 ) * ( 0.5 + data[ j ] * 0.007 );
+	}
+	context.putImageData( image, 0, 0 );
+// Scaled 4x
+	canvasScaled = document.createElement( 'canvas' );
+	canvasScaled.width = width * 4;
+	canvasScaled.height = height * 4;
+	context = canvasScaled.getContext( '2d' );
+	context.scale( 4, 4 );
+	context.drawImage( canvas, 0, 0 );
+	image = context.getImageData( 0, 0, canvasScaled.width, canvasScaled.height );
+	imageData = image.data;
+	for ( var i = 0, l = imageData.length; i < l; i += 4 ) {
+		var v = ~~ ( Math.random() * 5 );
+		imageData[ i ] += v;
+		imageData[ i + 1 ] += v;
+		imageData[ i + 2 ] += v;
+	}
+	context.putImageData( image, 0, 0 );
+	return canvasScaled;
+}
+
+/*-----------------------------------------------------------------------------
+クォータニオンを用いた航法計算
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　クォータニオンを用いた航法計算
+
+------------------------------------------------------------------------------*/
+function  Navigation(){
+	var Q_tmp  = new THREE.Quaternion();
+	var Pv_L   = new THREE.Vector3( 0,  0,  0 );  // 機体速度
+	var Av_L   = new THREE.Vector3( 0,  0,  0 );  // 機体角速度
+	var upd    =  [ 0, 0, 0,
+			0, 0, 0,
+			0, 0, 0 ];
+	
+	Q_tmp  = Oil2qtn( Av_b   );
+	Qmodel = Qmult  ( Qmodel, Q_tmp );
+	DCM_bL = Q2dcm  ( Qmodel );
+	upd    = updmx  ( A_b    );
+       	Pv_L   = Mtxvec ( DCM_bL, V );
+       	Av_L   = Mtxvec ( upd, Av_b );
+     	P      = Vadd   ( P,   Pv_L );
+       	A_b    = Vadd   ( A_b, Av_L );
+}
+
+/*-----------------------------------------------------------------------------
+クォータニオンを用いた航法計算 AI1
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　クォータニオンを用いた航法計算 AI1
+
+------------------------------------------------------------------------------*/
+function  NavigationAI1(){
+	var Q_tmp  = new THREE.Quaternion();
+	var Pv_L   = new THREE.Vector3( 0,  0,  0 );  // 機体速度
+	var Av_L   = new THREE.Vector3( 0,  0,  0 );  // 機体角速度
+	var upd    =  [ 0, 0, 0,
+			0, 0, 0,
+			0, 0, 0 ];
+	
+	Q_tmp   = Oil2qtn( Acv_b );
+	Qmodelc = Qmult  ( Qmodelc, Q_tmp );
+	DCM_AI1 = Q2dcm  ( Qmodelc );
+	upd     = updmx  ( Ac_b  );
+       	Pv_L    = Mtxvec ( DCM_AI1, Vc );
+       	Av_L    = Mtxvec ( upd, Acv_b );
+     	Pc      = Vadd   ( Pc,  Pv_L );
+       	Ac_b    = Vadd   ( Ac_b, Av_L );
+}
+
+/*-----------------------------------------------------------------------------
+クォータニオンを用いた航法計算 AI2
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　クォータニオンを用いた航法計算 AI2
+
+------------------------------------------------------------------------------*/
+function  NavigationAI2(){
+	var Q_tmp  = new THREE.Quaternion();
+	var Pv_L   = new THREE.Vector3( 0,  0,  0 );  // 機体速度
+	var Av_L   = new THREE.Vector3( 0,  0,  0 );  // 機体角速度
+	var upd    =  [ 0, 0, 0,
+			0, 0, 0,
+			0, 0, 0 ];
+	
+	Q_tmp   = Oil2qtn( Adv_b );
+	Qmodeld = Qmult  ( Qmodeld, Q_tmp );
+	DCM_AI2 = Q2dcm  ( Qmodeld );
+	upd     = updmx  ( Ad_b  );
+       	Pv_L    = Mtxvec ( DCM_AI2, Vd );
+       	Av_L    = Mtxvec ( upd, Adv_b );
+     	Pd      = Vadd   ( Pd,  Pv_L );
+       	Ad_b    = Vadd   ( Ad_b, Av_L );
+}
+
+/*-----------------------------------------------------------------------------
+クォータニオン化ベクトル変換
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　ベクトル（Ｘ，Ｙ，Ｚ）からクォータニオン（Ｑ０、Ｑ１、Ｑ２、Ｑ３）を
+　　　　設定する。
+
+------------------------------------------------------------------------------*/
+function  Vec2qtn( V ){
+	var	Q= new THREE.Quaternion();
+	var	a,b,c;		/* 計算バッファ */
+	
+	a = V.x * V.x + V.y * V.y + V.z * V.z;
+	
+	if( a != 0.0 ){
+        	a = Math.sqrt( a       );
+        	b = Math.cos ( a * 0.5 );
+        	c = Math.sin ( a * 0.5 );
+        	
+        	Q.w = b;
+        	Q.x = V.x / a * c;
+        	Q.y = V.y / a * c;
+        	Q.z = V.z / a * c;
+    	}else{
+        	Q.w = 1.0; Q.x = Q.y = Q.z = 0.0;
+    	}
+    	return Q;
+}
+
+/*-----------------------------------------------------------------------------
+クォータニオン化オイラー変換
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　オイラー角（Ｘ，Ｙ，Ｚ）からクォータニオン（Ｑ０、Ｑ１、Ｑ２、Ｑ３）を
+　　　　設定する。
+
+------------------------------------------------------------------------------*/
+function  Oil2qtn( V ){
+	var    Q    = new THREE.Quaternion();
+	var    qbuf = new THREE.Quaternion();
+	var    Vbuf = new THREE.Vector3( 0,  0,  0 );
+	
+	Vbuf.x = 0.0;
+	Vbuf.y = 0.0;
+	Vbuf.z = V.z;
+	Q = Vec2qtn( Vbuf );
+	
+	Vbuf.x = 0.0;
+	Vbuf.y = V.y;
+	Vbuf.z = 0.0;
+	qbuf = Vec2qtn( Vbuf );
+	Q = Qmult( Q, qbuf );
+	
+	Vbuf.x = V.x;
+	Vbuf.y = 0.0;
+	Vbuf.z = 0.0;
+	qbuf = Vec2qtn( Vbuf );
+	Q = Qmult( Q, qbuf );
+    	return Q;
+}
+
+/*-----------------------------------------------------------------------------
+姿勢更新行列生成
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　角度ベクトル A_b から 更新行列 upd[]を作成する。
+
+------------------------------------------------------------------------------*/
+function  updmx( A_b ){
+
+	var upd    =  [ 0, 0, 0,
+			0, 0, 0,
+			0, 0, 0 ];
+	var sin_p,sin_q,sin_r;
+	var cos_p,cos_q,cos_r;
+	sin_p = Math.sin( A_b.x );
+	sin_q = Math.sin( A_b.y );
+	sin_r = Math.sin( A_b.z );
+	cos_p = Math.cos( A_b.x );
+	cos_q = Math.cos( A_b.y );
+	cos_r = Math.cos( A_b.z );
+	upd[0] = 1.0;
+	upd[1] = sin_p * sin_q / cos_q;
+	upd[2] = cos_p * sin_q / cos_q;
+	upd[3] = 0.0;
+	upd[4] = cos_p;
+	upd[5] = (-sin_q * sin_r - sin_p);
+	upd[6] = 0.0;
+	upd[7] = sin_p / cos_q;
+	upd[8] = cos_p / cos_q;
+	return upd;
+}
+
+/*-----------------------------------------------------------------------------
+クォータニオンの更新
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　角度増分ベクトル（Ｘ，Ｙ，Ｚ）から
+　　　　クォータニオン（Ｑ０、Ｑ１、Ｑ２、Ｑ３）を更新する。
+
+------------------------------------------------------------------------------*/
+function  Qvupdt( Q, V ){
+	var    a,b,w, x, y, z;
+	a = V.x * V.x + V.y * V.y + V.z * V.z;
+	b = 1.0 - a / 12.0;
+	
+	w = Q.w * b + (-V.x * Q.x - V.y * Q.y - V.z * Q.z ) / 2.0;
+	x = Q.x * b + ( V.x * Q.w - V.y * Q.z + V.z * Q.y ) / 2.0;
+	y = Q.y * b + ( V.x * Q.z + V.y * Q.w - V.z * Q.x ) / 2.0;
+	z = Q.z * b + (-V.x * Q.y + V.y * Q.x + V.z * Q.w ) / 2.0;
+	
+	Q.w = w; Q.x = x; Q.y = y; Q.z = z;
+	return Q;
+}
+
+/*-----------------------------------------------------------------------------
+クォータニオンの正規化
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　クォータニオン（Ｑ０、Ｑ１、Ｑ２、Ｑ３）を正規化する。
+
+------------------------------------------------------------------------------*/
+function  Qnorm( Q ){
+	var    s;
+	s = ( 3.0 - Q.w * Q.w - Q.x * Q.x - Q.y * Q.y - Q.z * Q.z ) * 0.5;
+	Q.w *= s;  Q.x *= s;  Q.y *= s;  Q.z *= s;
+	return Q;
+}
+
+/*-----------------------------------------------------------------------------
+クォータニオンの共役化
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　クォータニオン（Ｑ０、Ｑ１、Ｑ２、Ｑ３）を共役化する。
+
+------------------------------------------------------------------------------*/
+function  Qconj( Q ){
+	Q.w =  Q.w;
+	Q.x = -Q.x;
+	Q.y = -Q.y;
+	Q.z = -Q.z;
+	return Q;
+}
+
+/*-----------------------------------------------------------------------------
+クォータニオンの積
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　クォータニオンＱｃ＝Ｑａ＊Ｑｂを計算する。
+
+------------------------------------------------------------------------------*/
+function  Qmult( Qa, Qb ){
+	var    Qc = new THREE.Quaternion();
+	Qc.w = Qa.w * Qb.w - Qa.x * Qb.x - Qa.y * Qb.y - Qa.z * Qb.z;
+	Qc.x = Qa.x * Qb.w + Qa.w * Qb.x - Qa.z * Qb.y + Qa.y * Qb.z;
+	Qc.y = Qa.y * Qb.w + Qa.z * Qb.x + Qa.w * Qb.y - Qa.x * Qb.z;
+	Qc.z = Qa.z * Qb.w - Qa.y * Qb.x + Qa.x * Qb.y + Qa.w * Qb.z;
+	return Qc;
+}
+
+/*-----------------------------------------------------------------------------
+クォータニオンの方向余弦行列化
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　クォータニオン（Ｑ０、Ｑ１、Ｑ２、Ｑ３）から方向余弦行列を作成する。
+
+------------------------------------------------------------------------------*/
+function  Q2dcm( Q ){
+	var DCM = [ 0, 0, 0,
+		    0, 0, 0,
+		    0, 0, 0 ];
+	var	q00,q11,q22,q33,
+		q01,q02,q03,
+		q12,q23,q31;
+	
+	q00 = Q.w * Q.w; q11 = Q.x * Q.x; q22 = Q.y * Q.y; q33 = Q.z * Q.z;
+	q01 = Q.w * Q.x; q02 = Q.w * Q.y; q03 = Q.w * Q.z;
+	q12 = Q.x * Q.y; q23 = Q.y * Q.z; q31 = Q.z * Q.x;
+	
+	DCM[0] = q00 + q11 - q22 - q33;
+	DCM[1] = 2.0 * ( q12 - q03 );
+	DCM[2] = 2.0 * ( q31 + q02 );
+	
+	DCM[3] = 2.0 * ( q12 + q03 );
+	DCM[4] = q00 - q11 + q22 - q33;
+	DCM[5] = 2.0 * ( q23 - q01 );
+	
+	DCM[6] = 2.0 * ( q31 - q02 );
+	DCM[7] = 2.0 * ( q23 + q01 );
+	DCM[8] = q00 - q11 - q22 + q33;
+	return DCM;
+}
+
+/*-----------------------------------------------------------------------------
+ベクトル和関数 [3]+[3]
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　ベクトルＡ＋ベクトルＢをベクトルＡに設定する。
+
+------------------------------------------------------------------------------*/
+function  Vadd( A, B ){
+	A.x += B.x;
+	A.y += B.y;
+	A.z += B.z;
+	return A;
+}
+
+/*-----------------------------------------------------------------------------
+行列計算[3*3]*[3]
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　３×３行列＊３要素ベクトルを計算する。
+
+------------------------------------------------------------------------------*/
+function  Mtxvec( DCM, V ){
+	var    O = new THREE.Vector3( 0,  0,  0 );
+	O.x = DCM[0] * V.x + DCM[1] * V.y + DCM[2] * V.z;
+	O.y = DCM[3] * V.x + DCM[4] * V.y + DCM[5] * V.z;
+	O.z = DCM[6] * V.x + DCM[7] * V.y + DCM[8] * V.z;
+	return O;
+}
+
+/*-----------------------------------------------------------------------------
+角度データ・リミッタ（±２π）
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　角度ベクトルを±２πラジアンの範囲でリミットする。
+
+------------------------------------------------------------------------------*/
+function  Alimit( A ){
+	if (A.x >=  (Math.PI * 2)) A.x -= (Math.PI * 2);
+	if (A.x <= -(Math.PI * 2)) A.x += (Math.PI * 2);
+	if (A.y >=  (Math.PI * 2)) A.y -= (Math.PI * 2);
+	if (A.y <= -(Math.PI * 2)) A.y += (Math.PI * 2);
+	if (A.z >=  (Math.PI * 2)) A.z -= (Math.PI * 2);
+	if (A.z <= -(Math.PI * 2)) A.z += (Math.PI * 2);
+	return A;
+}
+
+/*-----------------------------------------------------------------------------
+外積
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　３ポイントの座標で構成される平面の外積ベクトルを求める。
+
+------------------------------------------------------------------------------*/
+function  Div( A, B, C ){
+	var    O = new THREE.Vector3( 0,  0,  0 );
+	
+	O.x = ( B.y - A.y ) * ( C.z - B.z ) - ( B.z - A.z ) * ( C.y - B.y );
+	O.y = ( B.z - A.z ) * ( C.x - B.x ) - ( B.x - A.x ) * ( C.z - B.z );
+	O.z = ( B.x - A.x ) * ( C.y - B.y ) - ( B.y - A.y ) * ( C.x - B.x );
+	return O;
+}
+
+/*-----------------------------------------------------------------------------
+内積
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　２ポイントの座標の内積を求める。
+
+------------------------------------------------------------------------------*/
+function  Dot( A, B ){
+	var    dot;
+	dot = A.x * B.x + A.y * B.y + A.z * B.z;
+	return dot;
+}
+
+/*-----------------------------------------------------------------------------
+方向余弦からオイラー角化
+-------------------------------------------------------------------------------
+機能内容
+
+（１）　方向余弦行列からオイラー角を計算する。
+
+------------------------------------------------------------------------------*/
+function  Dcm2vec( m ){
+	var    O = new THREE.Vector3( 0,  0,  0 );
+	O.x =  Math.atan( m[ 7 ] / m[ 8 ] );
+	O.y = -Math.asin( m[ 6 ] );
+	O.z =  Math.atan( m[ 3 ] / m[ 0 ]  );
+	return O;
+}
+
+/*-----------------------------------------------------------------------------
+#define PI                              3.14159265358979323846
+#define PI2                             6.28318530717958647692
+#define G                               9.8
+#define FT                         	0.3048
+#define IN_RANGE(x,minX,maxX)           (((x)>=(minX)) && ((x)<=(maxX)))
+#define OUT_RANGE(x,minX,maxX)          (((x)< (minX)) || ((x)> (maxX)))
+#define CUT_LIMIT(x,xMin,xMax)          (x>xMax)?xMax:((x<xMin)?xMin:x)
+#define NEAR_ZERO(x)                    (((x)<1.0e-5)&&((x)>-1.0e-5))
+#define MOD(a, b)                       (((a) + (b)) % (b))
+#define NUM_ARRAY(array)                (sizeof(array)/sizeof(*array))
+#define SD_MAX(x,y)                     (((x)>=(y))?(x):(y))
+#define SD_MIN(x,y)                     (((x)<=(y))?(x):(y))
+#define SD_MAX3(x1,x2,x3)               (((x1)>=(x2))?(((x1)>=(x3))?(x1):(x3)):(((x2)>=(x3))?(x2):(x3)))
+#define SD_MIN3(x1,x2,x3)               (((x1)<=(x2))?(((x1)<=(x3))?(x1):(x3)):(((x2)<=(x3))?(x2):(x3)))
+#define POW(x)                          ((x)*(x))
+#define KEEP_360(deg)                   (((deg)>=0.0)?(fmod((deg),360.0)):(fmod((deg),360.0)+360.0))
+#define KEEP_180(deg)                   (KEEP_360((deg)+180.0)-180.0)
+#define KEEP_FPI(rad)                   (((rad)>=0.0)?(fmod((rad),PI2)):(fmod((rad),PI2)+PI2))
+#define KEEP_PI(rad)                    (KEEP_FPI((rad)+Math.PI)-Math.PI)
+#define KEEP_HPI(rad)                   fmod((rad),Math.PI/2.0)
+#define DEG2RAD(deg)                    ((deg) * Math.PI / 180.0 )
+#define RAD2DEG(rad)                    ((rad) * 180.0 / Math.PI )
+#define DEG_SIN(deg)                    (Math.sin((double)DEG2RAD(deg))) 
+#define DEG_COS(deg)                    (Math.cos((double)DEG2RAD(deg))) 
+#define DEG_TAN(deg)                    (Math.tan((double)DEG2RAD(deg))) 
+#define SD_DSWAP(x,y)                   {double tmp;tmp=(x);(x)=(y);(y)=tmp;}
+#define SD_FSWAP(x,y)                   {double tmp;tmp=(x);(x)=(y);(y)=tmp;}
+#define SD_ISWAP(x,y)                   {int tmp;tmp=(x);(x)=(y);(y)=tmp;}
+-----------------------------------------------------------------------------*/
+	</script>
+</body>
+</html>
+<!-- ---------------------------------------
+Good Luck!
+---------------------------------------- -->

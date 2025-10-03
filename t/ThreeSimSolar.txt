@@ -1,0 +1,817 @@
+﻿<!DOCTYPE html>
+<!-- --------------------------------------------------------------------------
+ThreeSim 3D model display software (Ver 1.3) 2016.11.11
+Coding by kuniyuki.tsujimoto
+@ 2016.10.22 using three.js and Quaternion
+
+-------------------------------------------------------------------------------
+Compiled unnecessary, without special 3D viewer, You can display any three-dimensional
+ models in only Web browser.
+The VRML Aircraft Museum There are data of a three-dimensional model VRML format of
+a lot of aircraft.
+By converting them into obj format in Blender, you can display all.
+You can view the three-dimensional display in WindowsPC / Mac / Linux / iOS terminal.
+
+-------------------------------------------------------------------------------
+kuniyuki.tsujimoto1182@nifty.com
+http://zero1962.world.coocan.jp/
+Please to follow me on FaceBook.
+
+-------------------------------------------------------------------------------
+◎良いところ：
+・特別な３Ｄ表示ビューアを必要としない。
+・iPhoneでもPCでも同じデータが表示できる。
+・コンパイル不要。
+・クオータニオンを使っているのでジンバルロックしない。
+・VRMLエアクラフト博物館のモデルは変換すれば全部表示可能。
+・お金がかからない。
+
+-------------------------------------------------------------------------------
+○使い方：
+・ボタンをクリックして操作します。1Click 加速, 2Click 巡行.
+・iOSの場合、画面をスライドして拡大縮小視点変更できます。
+・PCの場合、マウス操作で拡大縮小視点変更できます。
+・VRML/MMDのモデルは、BlenderでOBJ/MTL形式ファイルに変換することで表示できます。
+
+-------------------------------------------------------------------------------
+♪製品仕様：
+・z軸マイナス方向が機体軸方向正とする。画面奥行方向。
+・Three.js/WebGLを用いることで、PCでもiOSでも3Dを表示できる。
+・AI機体（ランダム飛行、飛行経路トレース）
+・GUIメニューのチェックリストで、表示項目のON/OFF設定する。
+・Three.jsのサンプルにある(ランダム地形、太陽、霧、鳥）風景描写を取り込む。
+・PC/iOSで数値表示ができる。
+
+-------------------------------------------------------------------------------
+□注意事項：
+・IE10以下では、動作しません。
+・OBJLoader/GUIMenuは、Webサーバ実行時有効です。
+・IE/chromeではOBJLoaderが使えません。FirefoxのみOK。
+・ローカルのIE/chromeで実行する場合は、OBJLoader/ModeMenuをコメントアウトしてください。
+
+-------------------------------------------------------------------------------
+△問題点：
+・速度ベクトルの座標変換が正しくない。Euler角90deg以上で符号が変わるYaw改善済。2016.11.10 解決
+・表示画素数の多いOBJモデルは、時々消えます。WebGLのキャッシュ拡大できるの？
+・地形データの色が、元のVRMLデータの通りにならない。
+・VRMLのようにプロペラを回せない。
+・OBJモデルのアニメ動作方法がわからない。MikuMikuAIのように。
+・JavaScriptといっても、Three.js/VRML/htmlで関数が違う？
+・コメント文が多いと起動／実行が遅くなる。( JavaScript はインタプリタだった？)
+
+-------------------------------------------------------------------------------
+▽その他：
+・改造再配布は、ご自身の責任でお願いします。
+・ご意見、ご質問は、上記にメール願います。
+・要望、アイデアをお待ちしております。
+
+-------------------------------------------------------------------------------
+◇履歴：
+2016.11.28 mon Textureのパスはsetpathで通るようになった。
+2016.11.12 sat FireFox最新版ならOBJLoaderがローカルPCで実行できる。
+2016.11.11 fri Ver 1.3
+2016.11.10 thu 自作クォータニオン関数による航法計算で問題解決できた。
+2016.11.10 thu 仕様追加
+2016.11.09 wed クォータニオン関数化
+2016.11.07 mon ランダム地形、太陽光、鳥の群れ、霧
+2016.11.01 tue 簡易機体形状、練習用飛行経路設定した。
+2016.10.30 sun Camera Lookup 成功。ｺｸﾋﾟｯﾄﾋﾞｭｰも改善し、MRJ90版も作成した。
+2016.10.29 sat 古いIE9/Chrom(on WindoesVista)では動作しない。
+2016.10.28 fri 数値表示できた。しかし、iOSでは表示できない。
+2016.10.22 Ver 1.0 新規コーディング
+
+--------------------------------------------------------------------------- -->
+<html lang="en">
+<title>Solar</title>
+<head><meta charset="UTF-8" />
+<meta name="Description" content="jsdo.it - share JavaScript, HTML5 and CSS -" />
+<meta name="Keywords"  content="JavaScript,HTML5,CSS" />
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1" />
+
+<!-- --------------------------------------------------------------------------
+スタイル
+--------------------------------------------------------------------------- -->
+<style type="text/css">
+body {
+	background-color: rgb(0, 100, 100);
+	margin:  0;
+	padding: 0;
+	overflow: hidden;
+}
+
+div#canvas-frame{
+	border: none;
+	cursor: pointer;
+	height: 140px;
+	background-color: #EEEEEE;
+	max-width: 100%;
+}
+div#canvas-frame canvas{
+	max-width: 100%;
+	max-height: auto;
+}
+
+#info { position: absolute; top: 60px; left: 20px; font-size: 16px;}
+
+#View_Button {
+	position: absolute;
+	right: 10px;
+	top:   70px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#Go_Button {
+	color: #0000FF;
+	position: absolute;
+	left:  250px;
+	bottom: 10px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+#Back_Button {
+	color: #0000FF;
+	position: absolute;
+	left:   10px;
+	bottom: 10px;
+	opacity: 0.4;
+	font-size: 30px;
+	border : solid 0px #ffffff;
+	border-radius : 15px;
+	moz-border-radius : 15px;
+	padding : 4px 6px;
+	background-color : #77FF77;
+}
+
+</style>
+<!-- --------------------------------------------------------------------------
+
+--------------------------------------------------------------------------- -->
+</head>
+<body onload="ValueMonitor();">
+<div id="canvas-frame"></div>
+<div id="container"></div>
+<div id="info">
+	ThreeSim is 3D model display software ( Ver 1.3 )<br>
+	coded by <a href="http://zero1962.world.coocan.jp/">
+	kuniyuki.tsujimoto(zero1962)</a> using three.js.<br>
+	Since 2016.10.22 sat<br>
+	<a href="./ThreeSimSolar.txt"> You can see this source. </a><hr>
+</div>
+<input id= "View_Button" type="button" value="View"  onclick= "View_ButtonHandler()">
+<input id=   "Go_Button" type="button" value="+"     onclick=   "Go_ButtonHandler()">
+<input id= "Back_Button" type="button" value="-"     onclick= "Back_ButtonHandler()">
+
+<!-- --------------------------------------------------------------------------
+関連 JavaScripts
+--------------------------------------------------------------------------- -->
+<script type="text/javascript" src="js/three.js">        	</script>
+<script type="text/javascript" src="js/ShadowMesh.js">   	</script>
+<script type="text/javascript" src="js/OrbitControls.js">	</script>
+<script type="text/javascript" src="js/DDSLoader.js">    	</script>
+<script type="text/javascript" src="js/MTLLoader.js">    	</script>
+<script type="text/javascript" src="js/OBJLoader.js">    	</script>
+<script type="text/javascript" src="js/VRMLLoader.js">   	</script>
+<script type="text/javascript" src="js/libs/stats.min.js">    	</script>
+<script type="text/javascript" src="js/spin.min.js">     	</script>
+<script type="text/javascript" src="js/ImprovedNoise.js">	</script>
+<script type="text/javascript" src="js/Detector.js">		</script>
+<script type="text/javascript" src="js/Projector.js">		</script>
+<script type="text/javascript" src="js/CanvasRenderer.js">	</script>
+<script type="text/javascript" src="js/SkyShader.js">		</script>
+
+<!-- ----------------------------------------------------------------------- -->
+<script type="text/javascript">
+if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+/*------------------------------------------------------------------------------
+JavaScript  グローバル変数宣言
+------------------------------------------------------------------------------*/
+var clock = new THREE.Clock();
+var frameTime = 0;
+var Time = 0;
+var stats;
+var controls;
+var controls0;
+var controls1;
+var controls2;
+var controls21;
+var controls3;
+var controls4;
+var controls5;
+var controls6;
+var controls7;
+var controls8;
+var controls9;
+//
+var renderer = new THREE.WebGLRenderer({antialias: true});
+var scene = new THREE.Scene();
+var SCREEN_WIDTH  = window.innerWidth;
+var SCREEN_HEIGHT = window.innerHeight;
+var activeCamera;
+var camera   = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera0  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera1  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera2  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera21 = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera3  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera4  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera5  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera6  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera7  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera8  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+var camera9  = new THREE.PerspectiveCamera( 55, SCREEN_WIDTH / SCREEN_HEIGHT, 0.01, 500000 );
+//
+var sunLight = new THREE.DirectionalLight( 'rgb(255,255,255)', 1 );
+var useDirectionalLight = true;
+var lightSphere, lightHolder;
+var lightPosition4D = new THREE.Vector4();
+//
+var normalVector = new THREE.Vector3( 0, 1, 0 );
+var planeConstant = 0.01;
+var groundPlane = new THREE.Plane( normalVector, planeConstant );
+//
+var View_BTN_No 	= 0;
+var   Go_BTN_Status 	= true;
+var Back_BTN_Status 	= true;
+var   YR_BTN_Status 	= true;
+var   YL_BTN_Status 	= true;
+var rad_Yaw 		= 0.0;
+//
+var Sun_mesh     = new THREE.Group();
+var Mercury_mesh = new THREE.Group();
+var Venus_mesh   = new THREE.Group();
+var Earth_mesh   = new THREE.Group();
+var Moon_mesh    = new THREE.Group();
+var Mars_mesh    = new THREE.Group();
+var Jupiter_mesh = new THREE.Group();
+var Saturn_mesh  = new THREE.Group();
+var Ring_mesh    = new THREE.Group();
+var Ring2_mesh   = new THREE.Group();
+var Neptun_mesh  = new THREE.Group();
+var Uranus_mesh  = new THREE.Group();
+var Pluto_mesh   = new THREE.Group();
+//
+var valueNode;
+var sky;
+//
+/*------------------------------------------------------------------------------
+JavaScript  関数構成
+------------------------------------------------------------------------------*/
+init(); // 初期化処理
+loop(); // 周期処理
+
+/*------------------------------------------------------------------------------
+JavaScript  初期化処理
+------------------------------------------------------------------------------*/
+function init() {
+//
+	document.getElementById('canvas-frame').appendChild ( renderer.domElement );
+	container = document.getElementById( 'container' );
+
+// Rendering
+	renderer.setSize       ( SCREEN_WIDTH, SCREEN_HEIGHT );
+	renderer.setClearColor ( 'rgb(0,150,255)' );
+	renderer.setPixelRatio ( window.devicePixelRatio );
+	window.addEventListener( 'resize' , onWindowResize, false );
+	onWindowResize();
+
+// Add Sky Mesh
+	sky = new THREE.Sky();
+	scene.add( sky.mesh );
+
+// Add Sun Helper
+	sunSphere = new THREE.Mesh(
+		new THREE.SphereBufferGeometry( 20, 16, 8 ),
+		new THREE.MeshBasicMaterial( { color: 0xffffff } )
+	);
+//	var distance                   = 600;
+//	sunSphere.position.y           = -600;
+	var distance                   = 0;
+	sunSphere.position.y           = 0;
+	sunSphere.visible              = false;
+	var uniforms                   = sky.uniforms;
+	uniforms.turbidity.value       = 10;
+	uniforms.reileigh.value        = 1;
+	uniforms.luminance.value       = 1;
+	uniforms.mieCoefficient.value  = 0.005;
+	uniforms.mieDirectionalG.value = 0.8;
+	var theta =     Math.PI * (  0.49 - 0.5 );  // elevation / inclination   0.49 夜明け
+	var phi   = 2 * Math.PI * (  0.25 - 0.5 );  // Facing front              0.25
+	sunSphere.position.x = distance * Math.cos( phi );
+	sunSphere.position.y = distance * Math.sin( phi ) * Math.sin( theta );
+	sunSphere.position.z = distance * Math.sin( phi ) * Math.cos( theta );
+	sunSphere.visible    = false;
+	sky.uniforms.sunPosition.value.copy( sunSphere.position );
+	scene.add( sunSphere );
+
+// Light
+	sunLight.position.x = sunSphere.position.x;
+	sunLight.position.y = sunSphere.position.y;
+	sunLight.position.z = sunSphere.position.z;
+	sunLight.lookAt( scene.position );
+	scene.add( sunLight );
+	lightPosition4D.x = sunLight.position.x;
+	lightPosition4D.y = sunLight.position.y;
+	lightPosition4D.z = sunLight.position.z;
+	lightPosition4D.w = 0.001;
+
+// XHR リクエスト
+	var onProgress = function ( xhr ) {
+		if ( xhr.lengthComputable ) {
+			var percentComplete = xhr.loaded / xhr.total * 100;
+			console.log( Math.round(percentComplete, 2) + '% downloaded' );
+		}
+	};
+	var onError = function ( xhr ) { };
+	THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+
+	var TexLoader = new THREE.TextureLoader();
+	TexLoader.setPath( 'obj/' );
+	TexLoader.load( 'Sun.jpg', function ( texture ) {
+		var geometry = new THREE.SphereGeometry( 1.5, 20, 20 );
+		var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+		Sun_mesh = new THREE.Mesh( geometry, material );
+		Sun_mesh.position.set  (   0, 0, 0 );
+		scene.add( Sun_mesh );
+	} );
+
+	var TexLoader = new THREE.TextureLoader();
+	TexLoader.setPath( 'obj/' );
+	TexLoader.load( 'Mercury.jpg', function ( texture ) {
+		var geometry = new THREE.SphereGeometry( 0.1, 20, 20 );
+		var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+		Mercury_mesh = new THREE.Mesh( geometry, material );
+		Mercury_mesh.position.set  (   2, 0, 0 );
+		scene.add( Mercury_mesh );
+	} );
+
+	var TexLoader = new THREE.TextureLoader();
+	TexLoader.setPath( 'obj/' );
+	TexLoader.load( 'Venus.jpg', function ( texture ) {
+		var geometry = new THREE.SphereGeometry( 0.18, 20, 20 );
+		var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+		Venus_mesh = new THREE.Mesh( geometry, material );
+		Venus_mesh.position.set  (   4, 0, 0 );
+		scene.add( Venus_mesh );
+	} );
+
+	var TexLoader = new THREE.TextureLoader();
+	TexLoader.setPath( 'obj/' );
+	TexLoader.load( 'Earth.jpg', function ( texture ) {
+		var geometry = new THREE.SphereGeometry( 0.2, 20, 20 );
+		var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+		Earth_mesh = new THREE.Mesh( geometry, material );
+		Earth_mesh.position.set  (   6, 0, 0 );
+		scene.add( Earth_mesh );
+	} );
+
+	var TexLoader = new THREE.TextureLoader();
+	TexLoader.setPath( 'obj/' );
+	TexLoader.load( 'Moon.jpg', function ( texture ) {
+		var geometry = new THREE.SphereGeometry( 0.05, 20, 20 );
+		var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+		Moon_mesh = new THREE.Mesh( geometry, material );
+		Moon_mesh.position.set  (   1, 0, 0 );
+	} );
+
+	var TexLoader = new THREE.TextureLoader();
+	TexLoader.setPath( 'obj/' );
+	TexLoader.load( 'Mars2.jpg', function ( texture ) {
+		var geometry = new THREE.SphereGeometry( 0.2, 20, 20 );
+		var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+		Mars_mesh = new THREE.Mesh( geometry, material );
+		Mars_mesh.position.set  (   10, 0, 0 );
+		scene.add( Mars_mesh );
+	} );
+
+	var TexLoader = new THREE.TextureLoader();
+	TexLoader.setPath( 'obj/' );
+	TexLoader.load( 'Jupiter.jpg', function ( texture ) {
+		var geometry = new THREE.SphereGeometry( 0.5, 20, 20 );
+		var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+		Jupiter_mesh = new THREE.Mesh( geometry, material );
+		Jupiter_mesh.position.set  (   12, 0, 0 );
+		scene.add( Jupiter_mesh );
+	} );
+
+	var TexLoader = new THREE.TextureLoader();
+	TexLoader.setPath( 'obj/' );
+	TexLoader.load( 'Saturn.jpg', function ( texture ) {
+		var geometry = new THREE.SphereGeometry( 0.5, 20, 20 );
+		var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+		Saturn_mesh = new THREE.Mesh( geometry, material );
+		Saturn_mesh.position.set  (   14, 0, 0 );
+		scene.add( Saturn_mesh );
+	} );
+
+	var TexLoader = new THREE.TextureLoader();
+	TexLoader.setPath( 'obj/' );
+	TexLoader.load( 'Ring.jpg', function ( texture ) {
+		var geometry = new THREE.CircleGeometry( 1.3, 20, 20 );
+		var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+		Ring_mesh = new THREE.Mesh( geometry, material );
+		Ring2_mesh = new THREE.Mesh( geometry, material );
+		Ring_mesh.rotation.set  (   1.45, 0, 0 );
+		Ring_mesh.position.set  (   0, 0, 0 );
+		Ring2_mesh.rotation.set (  -1.69, 0, 0 );
+		Ring2_mesh.position.set (   0, 0, 0 );
+	} );
+
+	var geometry = new THREE.SphereGeometry( 0.1, 20, 20 );
+	var material = new THREE.MeshLambertMaterial ( { color: 'rgb(255,255,255)', emissive: 0xee9900 } );
+	Uranus_mesh = new THREE.Mesh( geometry, material );
+	Uranus_mesh.position.set  (   20, 0, 0 );
+	scene.add( Uranus_mesh );
+
+	var geometry = new THREE.SphereGeometry( 0.15, 20, 20 );
+	var material = new THREE.MeshLambertMaterial ( { color: 'rgb(100,100,255)', emissive: 0x00ffff } );
+	Neptun_mesh = new THREE.Mesh( geometry, material );
+	Neptun_mesh.position.set  (   25, 0, 0 );
+	scene.add( Neptun_mesh );
+
+	var geometry = new THREE.SphereGeometry( 0.08, 20, 20 );
+	var material = new THREE.MeshLambertMaterial ( { color: 'rgb(100,100,100)', emissive: 0x555555 } );
+	Pluto_mesh = new THREE.Mesh( geometry, material );
+	Pluto_mesh.position.set  (   30, 0, 0 );
+	scene.add( Pluto_mesh );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus   = new THREE.Mesh( new THREE.TorusGeometry( 2, 0.007, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus.position.set (    0,  0,    0 );Torus.rotation.set (  1.57, 0, 0 );
+	scene.add( Torus );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus1   = new THREE.Mesh( new THREE.TorusGeometry( 4, 0.007, 20, 20, Math.PI * 2 ), Torusmaterial );
+	Torus1.position.set (    0,  0,    0 );Torus1.rotation.set (  1.57, 0, 0 );
+	scene.add( Torus1 );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus2   = new THREE.Mesh( new THREE.TorusGeometry( 6, 0.007, 50, 50, Math.PI * 2 ), Torusmaterial );
+	Torus2.position.set (    0,  0,    0 );Torus2.rotation.set (  1.57, 0, 0 );
+	scene.add( Torus2 );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus21   = new THREE.Mesh( new THREE.TorusGeometry( 1, 0.005, 50, 50, Math.PI * 2 ), Torusmaterial );
+	Torus21.position.set (    0,  0,    0 );Torus21.rotation.set (  1.57, 0, 0 );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus3   = new THREE.Mesh( new THREE.TorusGeometry( 8, 0.007, 50, 50, Math.PI * 2 ), Torusmaterial );
+	Torus3.position.set (    0,  0,    0 );Torus3.rotation.set (  1.57, 0, 0 );
+	scene.add( Torus3 );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus4   = new THREE.Mesh( new THREE.TorusGeometry( 10, 0.007, 50, 50, Math.PI * 2 ), Torusmaterial );
+	Torus4.position.set (    0,  0,    0 );Torus4.rotation.set (  1.57, 0, 0 );
+	scene.add( Torus4 );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus5   = new THREE.Mesh( new THREE.TorusGeometry( 15, 0.007, 50, 50, Math.PI * 2 ), Torusmaterial );
+	Torus5.position.set (    0,  0,    0 );Torus5.rotation.set (  1.57, 0, 0 );
+	scene.add( Torus5 );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus6   = new THREE.Mesh( new THREE.TorusGeometry( 20, 0.007, 50, 50, Math.PI * 2 ), Torusmaterial );
+	Torus6.position.set (    0,  0,    0 );Torus6.rotation.set (  1.57, 0, 0 );
+	scene.add( Torus6 );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus7   = new THREE.Mesh( new THREE.TorusGeometry( 20, 0.007, 50, 50, Math.PI * 2 ), Torusmaterial );
+	Torus7.position.set (    0,  0,    0 );Torus7.rotation.set (  1.57, 0, 0 );
+	scene.add( Torus7 );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus8   = new THREE.Mesh( new THREE.TorusGeometry( 25, 0.007, 50, 50, Math.PI * 2 ), Torusmaterial );
+	Torus8.position.set (    0,  0,    0 );Torus8.rotation.set (  1.57, 0, 0 );
+	scene.add( Torus8 );
+
+	var Torusmaterial = new THREE.MeshLambertMaterial( { color: 0xFFFF00, emissive: 0xFFFF00, wireframe:false,transparent: true, opacity: 1 } );
+	Torus9   = new THREE.Mesh( new THREE.TorusGeometry( 30, 0.007, 50, 50, Math.PI * 2 ), Torusmaterial );
+	Torus9.position.set (    0,  0,    0 );Torus9.rotation.set (  1.57, 0, 0 );
+	scene.add( Torus9 );
+
+
+// Camera Window
+	camera .position.set(    0,   5,    15 );
+	activeCamera = camera;
+	scene.add( activeCamera );
+
+// マウスコントローラー
+	controls = new THREE.OrbitControls ( camera,renderer.domElement);
+	controls.maxDistance = 1000;
+//	controls.maxPolarAngle = Math.PI * 0.48;
+	controls0 = new THREE.OrbitControls ( camera0,renderer.domElement);
+	controls0.maxDistance = 1000;
+//	controls0.maxPolarAngle = Math.PI * 0.48;
+	controls1 = new THREE.OrbitControls ( camera1,renderer.domElement);
+	controls1.maxDistance = 1000;
+//	controls1.maxPolarAngle = Math.PI * 0.48;
+	controls2 = new THREE.OrbitControls ( camera2,renderer.domElement);
+	controls2.maxDistance = 1000;
+//	controls2.maxPolarAngle = Math.PI * 0.48;
+	controls21 = new THREE.OrbitControls ( camera21,renderer.domElement);
+	controls21.maxDistance = 1000;
+//	controls21.maxPolarAngle = Math.PI * 0.48;
+	controls3 = new THREE.OrbitControls ( camera3,renderer.domElement);
+	controls3.maxDistance = 1000;
+//	controls3.maxPolarAngle = Math.PI * 0.48;
+	controls4 = new THREE.OrbitControls ( camera4,renderer.domElement);
+	controls4.maxDistance = 1000;
+//	controls4.maxPolarAngle = Math.PI * 0.48;
+	controls5 = new THREE.OrbitControls ( camera5,renderer.domElement);
+	controls5.maxDistance = 1000;
+//	controls5.maxPolarAngle = Math.PI * 0.48;
+	controls6 = new THREE.OrbitControls ( camera6,renderer.domElement);
+	controls6.maxDistance = 1000;
+//	controls6.maxPolarAngle = Math.PI * 0.48;
+	controls7 = new THREE.OrbitControls ( camera7,renderer.domElement);
+	controls7.maxDistance = 1000;
+//	controls7.maxPolarAngle = Math.PI * 0.48;
+	controls8 = new THREE.OrbitControls ( camera8,renderer.domElement);
+	controls8.maxDistance = 1000;
+//	controls8.maxPolarAngle = Math.PI * 0.48;
+	controls9 = new THREE.OrbitControls ( camera9,renderer.domElement);
+	controls9.maxDistance = 1000;
+//	controls9.maxPolarAngle = Math.PI * 0.48;
+	
+// GUI  Menu
+	Menu = {};
+	Menu.Speed  = 0.01;
+	Menu.Zoom   = 0;
+
+	
+// FPS 描画性能表示
+	stats = new Stats();
+	container.appendChild( stats.dom );
+
+// テキスト数値表示 1行目
+	var valueDiv = document.createElement( 'div' );
+	valueDiv.style.position = 'absolute';
+	valueDiv.style.top      = '200px';
+	valueDiv.style.right    = '0px';
+	valueDiv.style.width    = '300px';
+	valueDiv.style.height   = '200px';
+	valueDiv.style.fontSize = '15px';
+	valueDiv.style.color	= '#FFFF00';
+	container.appendChild( valueDiv );
+	valueNode  = document.createTextNode( '' );
+	valueDiv.appendChild( valueNode );
+}
+
+/*------------------------------------------------------------------------------
+JavaScript  周期処理
+------------------------------------------------------------------------------*/
+function loop() {
+	requestAnimationFrame( loop );
+	frameTime = clock.getDelta();
+	Time  += frameTime;
+
+/*----------------------------------------------------------------------------*/
+// デバッグ用数値表示( iOSでは表示されない )
+	document.getElementById( 'Q.w' ).value = Menu.Zoom;
+
+	if( YR_BTN_Status )
+	{
+		;
+	}
+	else
+	{
+		Menu.Zoom += 0.1;
+	}
+	
+	if( YL_BTN_Status )
+	{
+		;
+	}
+	else
+	{
+		Menu.Zoom -= 0.1;
+	}
+
+	Sun_mesh.rotation.y += Menu.Speed;
+	Sun_mesh.position.set  (   0, 0, 0 );
+	camera0.position.z = 1 + Menu.Zoom;
+	scene.add( camera0 );
+	scene.add( Sun_mesh );
+
+	Mercury_mesh.rotation.y += Menu.Speed;
+	Mercury_mesh.position.x = 2 * Math.sin( Time * Math.PI / 5 );
+	Mercury_mesh.position.z = 2 * Math.cos( Time * Math.PI / 5 );
+	     camera1.position.x = Mercury_mesh.position.x;
+	     camera1.position.z = Mercury_mesh.position.z + 1.05 + Menu.Zoom;
+	scene.add( camera1 );
+	scene.add( Mercury_mesh );
+
+	Venus_mesh.rotation.y += Menu.Speed;
+	Venus_mesh.position.x = 4 * Math.sin( Time * Math.PI / 8 );
+	Venus_mesh.position.z = 4 * Math.cos( Time * Math.PI / 8 );
+	     camera2.position.x = Venus_mesh.position.x;
+	     camera2.position.z = Venus_mesh.position.z + 1.05 + Menu.Zoom;
+	scene.add( camera2 );
+	scene.add( Venus_mesh );
+
+	Moon_mesh.rotation.y += Menu.Speed;
+	     camera21.position.x = Moon_mesh.position.x;
+	     camera21.position.z = Moon_mesh.position.z + 0.3 + Menu.Zoom;
+	Earth_mesh.add( camera21 );
+	Earth_mesh.add( Torus21 )
+	Earth_mesh.add( Moon_mesh )
+
+	Earth_mesh.rotation.y += Menu.Speed;
+	Earth_mesh.position.x = 6 * Math.sin( Time * Math.PI / 10 );
+	Earth_mesh.position.z = 6 * Math.cos( Time * Math.PI / 10 );
+	     camera3.position.x = Earth_mesh.position.x;
+	     camera3.position.z = Earth_mesh.position.z + 1.008 + Menu.Zoom;
+	scene.add( camera3 );
+	scene.add( Earth_mesh );
+
+
+	Mars_mesh.rotation.y += Menu.Speed;
+	Mars_mesh.position.x = 8 * Math.sin( Time * Math.PI / 13 );
+	Mars_mesh.position.z = 8 * Math.cos( Time * Math.PI / 13 );
+	     camera4.position.x = Mars_mesh.position.x;
+	     camera4.position.z = Mars_mesh.position.z + 1.05 + Menu.Zoom;
+	scene.add( camera4 );
+	scene.add( Mars_mesh );
+
+	Jupiter_mesh.rotation.y += Menu.Speed;
+	Jupiter_mesh.position.x = 10 * Math.sin( Time * Math.PI / 18 );
+	Jupiter_mesh.position.z = 10 * Math.cos( Time * Math.PI / 18 );
+	     camera5.position.x = Jupiter_mesh.position.x;
+	     camera5.position.z = Jupiter_mesh.position.z + 2 + Menu.Zoom;
+	scene.add( camera5 );
+	scene.add( Jupiter_mesh );
+
+	Saturn_mesh.add( Ring_mesh  );
+	Saturn_mesh.add( Ring2_mesh );
+
+	Saturn_mesh.rotation.y += Menu.Speed;
+	Saturn_mesh.position.x = 15 * Math.sin( Time * Math.PI / 22 );
+	Saturn_mesh.position.z = 15 * Math.cos( Time * Math.PI / 22 );
+	     camera6.position.x = Saturn_mesh.position.x;
+	     camera6.position.z = Saturn_mesh.position.z + 2 + Menu.Zoom;
+	scene.add( camera6 );
+	scene.add( Saturn_mesh );
+
+	Uranus_mesh.rotation.y += Menu.Speed;
+	Uranus_mesh.position.x = 20 * Math.sin( Time * Math.PI / 24 );
+	Uranus_mesh.position.z = 20 * Math.cos( Time * Math.PI / 24 );
+	     camera7.position.x = Uranus_mesh.position.x;
+	     camera7.position.z = Uranus_mesh.position.z + 1.05 + Menu.Zoom;
+	scene.add( camera7 );
+	scene.add( Uranus_mesh );
+
+	Neptun_mesh.rotation.y += Menu.Speed;
+	Neptun_mesh.position.x = 25 * Math.sin( Time * Math.PI / 26 );
+	Neptun_mesh.position.z = 25 * Math.cos( Time * Math.PI / 26 );
+	     camera8.position.x = Neptun_mesh.position.x;
+	     camera8.position.z = Neptun_mesh.position.z + 1.05 + Menu.Zoom;
+	scene.add( camera8 );
+	scene.add( Neptun_mesh );
+
+	Pluto_mesh.rotation.y += Menu.Speed;
+	Pluto_mesh.position.x = 30 * Math.sin( Time * Math.PI / 28 );
+	Pluto_mesh.position.z = 30 * Math.cos( Time * Math.PI / 28 );
+	     camera9.position.x = Pluto_mesh.position.x;
+	     camera9.position.z = Pluto_mesh.position.z + 1.05 + Menu.Zoom;
+	scene.add( camera9 );
+	scene.add( Pluto_mesh );
+
+/*----------------------------------------------------------------------------*/
+// Camera mode.
+	if( View_BTN_No == 0 )
+	{
+		camera.position.z = 16 + Menu.Zoom;
+		activeCamera = camera;
+	}
+	else if( View_BTN_No == 1 )
+	{
+		camera0.position.z = 7 + Menu.Zoom;
+		activeCamera = camera0;
+	}
+	else if( View_BTN_No == 2 )
+	{
+		activeCamera = camera1;
+	}
+	else if( View_BTN_No == 3 )
+	{
+		activeCamera = camera2;
+	}
+	else if( View_BTN_No == 4 )
+	{
+		activeCamera = camera3;
+	}
+	else if( View_BTN_No == 5 )
+	{
+		activeCamera = camera21;
+	}
+	else if( View_BTN_No == 6 )
+	{
+		activeCamera = camera4;
+	}
+	else if( View_BTN_No == 7 )
+	{
+		activeCamera = camera5;
+	}
+	else if( View_BTN_No == 8 )
+	{
+		activeCamera = camera6;
+	}
+	else if( View_BTN_No == 9 )
+	{
+		activeCamera = camera7;
+	}
+	else if( View_BTN_No == 10 )
+	{
+		activeCamera = camera8;
+	}
+	else if( View_BTN_No == 11 )
+	{
+		activeCamera = camera9;
+	}
+
+/*----------------------------------------------------------------------------*/
+// テキスト数値表示
+	valueNode.nodeValue  	=  'Time:' + Time.toFixed(2);
+/*----------------------------------------------------------------------------*/
+// 周期処理
+	renderer.render( scene, activeCamera );
+	stats.update();
+}
+
+/*----------------------------------------------------------------------------*/
+// 数値モニタ関数  iOSでは表示されない。
+/*----------------------------------------------------------------------------*/
+function ValueMonitor() {
+	label_Qw = document.createElement("label");
+	input_Qw = document.createElement("input");
+	label_Qw.innerHTML = "  <br />  Q.w = ";
+	document.body.appendChild(label_Qw);
+	     label_Qw.appendChild(input_Qw);
+	     input_Qw.id    = 'Q.w';
+}
+
+/*----------------------------------------------------------------------------*/
+// ウィンドウサイズ変更対応
+/*----------------------------------------------------------------------------*/
+function onWindowResize() {
+	SCREEN_WIDTH = window.innerWidth;
+	SCREEN_HEIGHT = window.innerHeight;
+	renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+	camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera.updateProjectionMatrix();
+	camera0.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera0.updateProjectionMatrix();
+	camera1.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera1.updateProjectionMatrix();
+	camera2.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera2.updateProjectionMatrix();
+	camera3.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera3.updateProjectionMatrix();
+	camera4.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera4.updateProjectionMatrix();
+	camera5.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera5.updateProjectionMatrix();
+	camera6.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera6.updateProjectionMatrix();
+	camera7.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera7.updateProjectionMatrix();
+	camera8.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera8.updateProjectionMatrix();
+	camera9.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera9.updateProjectionMatrix();
+	camera21.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+	camera21.updateProjectionMatrix();
+}
+
+/*----------------------------------------------------------------------------*/
+// ボタン処理
+/*----------------------------------------------------------------------------*/
+function View_ButtonHandler() {
+	View_BTN_No++;
+	View_BTN_No %= 12;
+}
+
+function Go_ButtonHandler() {
+	YR_BTN_Status = !YR_BTN_Status;
+}
+
+function Back_ButtonHandler() {
+	YL_BTN_Status = !YL_BTN_Status;
+}
+	</script>
+</body>
+</html>
+<!-- ---------------------------------------
+Good Luck!
+---------------------------------------- -->

@@ -1,0 +1,15 @@
+Attribute VB_Name = "Module2"
+'///////////////////////////////////////////
+'               ＤＬＬ宣言
+'///////////////////////////////////////////
+
+'計器データ共有メモリ確保
+Public Declare Function D_FSshmMap Lib "FSshm.dll" (dmy As Long) As Long
+
+'計器データ共有メモリ開放
+Public Declare Function D_FSshmUnmap Lib "FSshm.dll" () As Long
+
+'計器データ取得
+Public Declare Function D_GetSigData Lib "FSshm.dll" _
+        (ByVal inst_id As Integer, inum As Integer, fnum As Integer, idata As Integer, fdata As Single) As Long
+
