@@ -4217,7 +4217,7 @@ function initGui () {
 		Menu.Demo   = true;
 		Menu.WingMan= false;
 		Menu.Try    = false;
-		Menu.Int    = 900;
+		Menu.Int    = 2000;
 		Menu.Speed  = 0.1;
 		Menu.Zoom   = 0;
 		setting.add( Menu, 'Axis'   ).onChange( function(){});
