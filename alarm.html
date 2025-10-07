@@ -4,18 +4,18 @@
 <HEAD>
 <META HTTP-EQUIV="Page-Enter" CONTENT="RevealTrans(Duration=1,Transition=23)">
 <!-- ---------------------------------
-016 �y�[�W�̐؂�ւ����ɓ�����ʂ�������B
-�g�����W�����̌��ʂ̎��
-0-1     ��`���g��E�k������B
-2-3     �~���g��E�k������B
-4-7     �㉺�E���E�Ƀ��C�v����B
-8-9     �c�E���Ƀu���C���h����B
-10-11   �s���͗l�Ő؂�ւ��B
-12      �ׂ�������ɐ؂�ւ��B
-13-16   �㉺�E���E����؂�ւ��B
-17-20   �p����΂߂ɐ؂�ւ��B
-21-22   �s�K���Ȑ��Ő؂�ւ��B
-23       0-22�������_���ɓK�p
+016 ページの切り替え時に特殊効果をかける。
+トランジョンの効果の種類
+0-1     矩形が拡大・縮小する。
+2-3     円が拡大・縮小する。
+4-7     上下・左右にワイプする。
+8-9     縦・横にブラインドする。
+10-11   市松模様で切り替わる。
+12      細かい砂状に切り替わる。
+13-16   上下・左右から切り替わる。
+17-20   角から斜めに切り替わる。
+21-22   不規則な線で切り替わる。
+23       0-22をランダムに適用
 ---------------------------------- -->
 <SCRIPT LANGUAGE="JavaScript">
 <!--
@@ -28,65 +28,65 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=x-sjis">
 <meta name="GENERATOR" content="Microsoft FrontPage 2.0">
-<title>���Ԃ�����</title>
+<title>時間を扱う</title>
 </head>
 
 <body background="gif/backgr.gif" bgcolor="#FFFFFF" onload="Main_Start()">
 <script language="JavaScript"><!--
 //***************************************************
 //* Copyright 1997.1- By Yoshihiro Hashimoto        *
-//* ���̕������c���Ă���������ꍇ�̂�              *
-//* �\�[�X�͂����R�ɂ��g�p���������B                *
+//* この部分を残していただける場合のみ              *
+//* ソースはご自由にご使用ください。                *
 //***************************************************
 
 function Main_Start(){
 //***************************
-//*  �����̊J�n             *
+//*  処理の開始             *
 //*                         *
-//* �����F Nothing          *
-//* �߂�F nothing          *
+//* 引数： Nothing          *
+//* 戻り： nothing          *
 //***************************
 
-  Time();//���Ԃ�\��������
-  //�f���p�̎��Ԃ��L������B���݂̎�����1����
-  minute = minute+1;//1����
-  now.setMinutes(minute);//1����̃Z�b�g ����Ŏ������������ő�����B
+  Time();//時間を表示させる
+  //デモ用の時間を記入する。現在の時刻の1分後
+  minute = minute+1;//1分後
+  now.setMinutes(minute);//1分後のセット これで時も日も自動で送られる。
 
-  document.fm2.Year.value = now.getYear()+1900;//�N�̕\��
-  //NN�́A99�N�̎���2000�AIE��99�̎���100�ׁ̈A��̎����Ⴄ�BNN��3900�N�ɂȂ�̂ŁA�΍�
+  document.fm2.Year.value = now.getYear()+1900;//年の表示
+  //NNは、99年の次は2000、IEは99の次が100の為、上の式が違う。NNは3900年になるので、対策
   if  (document.fm2.Year.value > 2500){
       document.fm2.Year.value = document.fm2.Year.value -1900;
   }
-  document.fm2.Month.value = now.getMonth()+1;//���̕\�� �d�l��1����0�̂��߁A1�����Z
-  document.fm2.Day.value = now.getDate();//���̕\��
-  document.fm2.Hour.value = now.getHours();//���̕\��
-  document.fm2.Minute.value = now.getMinutes();//���̕\�� 1����
-  Alm_Start();//�A���[���N��
+  document.fm2.Month.value = now.getMonth()+1;//月の表示 仕様で1月は0のため、1を加算
+  document.fm2.Day.value = now.getDate();//日の表示
+  document.fm2.Hour.value = now.getHours();//時の表示
+  document.fm2.Minute.value = now.getMinutes();//分の表示 1分後
+  Alm_Start();//アラーム起動
 }
 
 
 function Alm_Start(){
 //***************************
-//*  �A���[�������̊J�n     *
+//*  アラーム処理の開始     *
 //*                         *
-//* �����F nothing          *
-//* �߂�F nothing          *
+//* 引数： nothing          *
+//* 戻り： nothing          *
 //***************************
-  Time();//���Ԃ�Get����
-  document.fm.watch.value = year +"�N"+ month +"��"+ day +"�� "+ hour +"��"+ minute +"��"+ second +"�b";
-  //�A���[�������̃`�F�b�N�{�b�N�X��On���𒲂ׂ�
+  Time();//時間をGetする
+  document.fm.watch.value = year +"年"+ month +"月"+ day +"日 "+ hour +"時"+ minute +"分"+ second +"秒";
+  //アラーム処理のチェックボックスがOnかを調べる
   if (document.fm2.Hyouji.checked == true){
-       Check_Time();//���Ԃ̔�r���s���B
+       Check_Time();//時間の比較を行う。
   }
-  setTimeout('Alm_Start()',1000);//1�b���ɌJ��Ԃ�
+  setTimeout('Alm_Start()',1000);//1秒毎に繰り返し
 }
 
 function Check_Time(){
 //*********************************
-//*  �A���[���w�莞�ԂƂ̔�r     *
+//*  アラーム指定時間との比較     *
 //*                               *
-//* �����F nothing                *
-//* �߂�F nothing                *
+//* 引数： nothing                *
+//* 戻り： nothing                *
 //*********************************
 
   if (eval(document.fm2.Year.value) == year){
@@ -94,9 +94,9 @@ function Check_Time(){
       if (eval(document.fm2.Day.value) == day){
          if (eval(document.fm2.Hour.value) == hour){
             if (eval(document.fm2.Minute.value) == minute){
-                 //�A���[�g�E�B���h�[���J���āA���b�Z�[�W�̕\��
-                 alert("�u"+ document.fm2.Msg.value +"�v�̎��ԂɂȂ�܂����I�I");
-                 document.fm2.Hyouji.checked = false;//���ꕪ�́A�ēx���b�Z�[�W���o�Ȃ��悤�ɂ��邽��
+                 //アラートウィンドーを開いて、メッセージの表示
+                 alert("「"+ document.fm2.Msg.value +"」の時間になりました！！");
+                 document.fm2.Hyouji.checked = false;//同一分は、再度メッセージが出ないようにするため
                  window.close();
             }
          }
@@ -107,20 +107,20 @@ function Check_Time(){
 
 function Time(){
 //***************************
-//*  ���݂̎�����\��       *
+//*  現在の時刻を表示       *
 //*                         *
-//* �����F nothing          *
-//* �߂�F nothing          *
+//* 引数： nothing          *
+//* 戻り： nothing          *
 //***************************
 
 
    now = new Date();
    year = now.getYear()+1900;
-   //NN�́A99�N�̎���2000�AIE��99�̎���100�ׁ̈A��̎����Ⴄ�BNN��3900�N�ɂȂ�̂ŁA�΍�
+   //NNは、99年の次は2000、IEは99の次が100の為、上の式が違う。NNは3900年になるので、対策
    if  (year > 2500){
       year = year -1900;
    }
-   month = now.getMonth()+1;//�d�l��1����0�̂��߁A1�����Z
+   month = now.getMonth()+1;//仕様で1月は0のため、1を加算
    day = now.getDate();
    hour = now.getHours();
    minute = now.getMinutes();
@@ -132,19 +132,19 @@ function Time(){
             <input type="text" size="36" name="watch">
         </form>
         <form method="POST" name="fm2">
-            <p align="left"><font color="#FF00FF"><strong>�w�����</strong></font>�i���̎��ԂɂȂ�ƁA�A���[�����ł܂��j
+            <p align="left"><font color="#FF00FF"><strong>指定日時</strong></font>（この時間になると、アラームがでます）
             <br>
-            <input type="text" size="5" name="Year">�N<input
-            type="text" size="5" name="Month">��<input
-            type="text" size="5" name="Day">��<input type="text"
-            size="5" name="Hour">��<input type="text" size="5"
-            name="Minute">��<br>
+            <input type="text" size="5" name="Year">年<input
+            type="text" size="5" name="Month">月<input
+            type="text" size="5" name="Day">日<input type="text"
+            size="5" name="Hour">時<input type="text" size="5"
+            name="Minute">分<br>
             <input type="checkbox" checked name="Hyouji"
-            value="ON"><font color="#FF00FF"><strong>�A���[�����g�p����</strong></font>
+            value="ON"><font color="#FF00FF"><strong>アラームを使用する</strong></font>
             </p>
-            <p align="left"><font color="#FF00FF"><strong>���e</strong></font>�i���̓��e��\�����܂��j<br>
+            <p align="left"><font color="#FF00FF"><strong>内容</strong></font>（この内容を表示します）<br>
             <input type="text" size="54" name="Msg"
-            value="���ԂɂȂ������ɕ\�����镶���ł�"></p>
+            value="時間になった時に表示する文字です"></p>
         </form>
 </center></div><div align="center"><center>
 
