@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <!-- ---------------------------------
 キーワードとページの説明を埋め込む。
@@ -10,167 +10,33 @@
   <title>zero1962</title>
   <style>
     body {
-      background-image:url("bg.gif");
+      background-image: url("bg.gif");
       background-repeat: repeat;
       background-position: 0 0;
       background-color: #00c5F5;
+      margin: 0;
+      overflow: hidden;
     }
     #img1, #img2 {
       position: absolute;
       visibility: hidden;
       top: 0;
       left: 0;
-      pointer-events: none; /* マウス操作を妨げないように */
+      pointer-events: none;
+    }
+    .dot {
+      position: absolute;
+      font-weight: bold;
+      transform: translate(-50%, -50%);
     }
   </style>
 </head>
-
 <body>
-  <!-- マウス追従アニメ用の画像（左向きと右向き） -->
-<IMG SRC="heli_le.gif" STYLE="position:absolute;visibility:hidden;top:0;left:0" ID=img1>
-<IMG SRC="heli_ri.gif" STYLE="position:absolute;visibility:hidden;top:0;left:0" ID=img2>
-
-  <script>
-    // 背景スクロール用変数
-    let bgY = 0;
-
-    // 背景スクロール関数
-    function BGscroll() {
-      bgY -= 1;
-      document.body.style.backgroundPosition = `0px ${bgY}px`;
-    }
-
-    // マウス追従アニメ用変数
-    let x = 0, y = 0, oldx = 0, oldy = 0;
-
-    // マウス移動時の処理
-    function heli_move(event) {
-      oldx = x;
-      oldy = y;
-      x = event.clientX;
-      y = event.clientY;
-
-      const img1 = document.getElementById("img1");
-      const img2 = document.getElementById("img2");
-
-      if (oldx <= x) {
-        // 右向き（img2）を表示
-        img1.style.visibility = "hidden";
-        img2.style.visibility = "visible";
-        img2.style.left = (x - 40 + window.scrollX) + "px";
-        img2.style.top = (y + 10 + window.scrollY) + "px";
-      } else {
-        // 左向き（img1）を表示
-        img1.style.visibility = "visible";
-        img2.style.visibility = "hidden";
-        img1.style.left = (x + 10 + window.scrollX) + "px";
-        img1.style.top = (y + 10 + window.scrollY) + "px";
-      }
-    }
-
-    // ページ読み込み時の初期化処理
-    window.onload = function() {
-      setInterval(BGscroll, 50);         // 背景スクロール開始
-      document.onmousemove = heli_move;  // マウス追従開始
-
-      // 必要に応じて以下の関数を定義してください
-      // yugami();
-      // slideshow();
-      // Realtime();
-      // timerONE = window.setTimeout(() => scrollit_r2l(100), 500);
-    };
-  </script>
-
-<!-- ---------------------------------
-アナログ時計
----------------------------------- -->
-<SCRIPT LANGUAGE="JavaScript">
-centerx=450;                       //表示位置横
-centery=300;                       //表示位置縦
-mojicolor="#0000ff";               //数字の色
-mojisize=24;                       //数字の大きさ
-tencolor="#0000ff";                //中心点の色
-tensize=24;                        //中心点の大きさ
-encolor="#77ffff";                 //背景点の色
-ensize=200;                        //背景点の大きさ
-Hcolor="#9900ff";                  //短針の色
-Mcolor="#cc00ff";                  //長針の色
-Scolor="#000000";                  //秒針の色
-Hspan=7;                           //短針の・と・の間隔
-Mspan=7;                           //長針の・と・の間隔
-Sspan=7;                           //秒針の・と・の間隔
-Hsize=14;                          //短針の・の大きさ
-Msize=10;                          //長針の・の大きさ
-Ssize=8;                           //秒針の・の大きさ
-diamete=70;                        //半径
-//---------------------------------------------------  
-
-jikan=2;
-document.write("<DIV STYLE='position:absolute;font-size:"+ensize+";top:"+(centery*0.84-ensize/2)+";left:"+(centerx*1.005-ensize/2)+";color:"+encolor+"'>●</DIV>");
-//document.write("<DIV STYLE='position:absolute;font-size:"+ensize+";top:"+(centery*0.87-ensize/2)+";left:"+(centerx*1.178-ensize/2)+";color:"+encolor+"'>●</DIV>");
-for(i=0;i<12;i++)
-{
-	staX=centerx + Math.cos(Math.PI*2/12*(i+1))*diamete;
-	staY=centery + Math.sin(Math.PI*2/12*(i+1))*diamete;
-	jikan++;jikan%=12;
-	document.write("<DIV STYLE='position:absolute;font:"+mojisize+" Times New Roman;top:"+(staY-6)+";left:"+(staX-6)+";color:"+mojicolor+"'><b>"+(jikan+1)+"</b></DIV>");
-}
-for(i=0;i<10;i++)
-{
-	document.write("<DIV STYLE='position:absolute;font-size:"+Msize+";top:"+centery+";left:"+centerx+";color:"+Mcolor+"'ID='M"+i+"'>●</DIV>");
-	document.write("<DIV STYLE='position:absolute;font-size:"+Ssize+";top:"+centery+";left:"+centerx+";color:"+Scolor+"'ID='S"+i+"'>●</DIV>");
-	if(i<7)document.write("<DIV STYLE='position:absolute;font-size:"+Hsize+";top:"+centery+";left:"+centerx+";color:"+Hcolor+"'ID='H"+i+"'>●</DIV>");
-}
-document.write("<DIV STYLE='position:absolute;font-size:"+tensize+";top:"+(centery*1.01-tensize/2)+";left:"+(centerx*1.018-tensize/2)+";color:"+tencolor+"'>●</DIV>");
-function Nowtime()
-{
-	Now=new Date();
-	S=Now.getSeconds()-15;
-	M=Now.getMinutes()+45;
-	H=(Now.getHours()+9)+(Now.getMinutes()/60);
-	for(i=0;i<10;i++)
-	{
-		funX=centerx + Math.cos(Math.PI*2/60*M)*(i*Mspan+Mspan);
-		funY=centery + Math.sin(Math.PI*2/60*M)*(i*Mspan+Mspan);
-		byouX=centerx + Math.cos(Math.PI*2/60*S)*(i*Sspan+Sspan);
-		byouY=centery + Math.sin(Math.PI*2/60*S)*(i*Sspan+Sspan);
-		if(document.all)
-		{
-			document.all("M"+i).style.pixelLeft = funX;
-			document.all("M"+i).style.pixelTop = funY;
-			document.all("S"+i).style.pixelLeft = byouX;
-			document.all("S"+i).style.pixelTop = byouY;
-		}
-		else
-		{
-			document.getElementById("M"+i).style.left = funX;
-			document.getElementById("M"+i).style.top = funY;
-			document.getElementById("S"+i).style.left = byouX;
-			document.getElementById("S"+i).style.top = byouY;
-		}
-		if(i > 6)continue;
-		hourX=centerx + Math.cos(Math.PI*2/12*H)*(i*Hspan+Hspan);
-		hourY=centery + Math.sin(Math.PI*2/12*H)*(i*Hspan+Hspan);
-		if(document.all)
-		{
-			document.all("H"+i).style.pixelLeft = hourX;
-			document.all("H"+i).style.pixelTop = hourY;
-		}
-		else
-		{
-			document.getElementById("H"+i).style.left = hourX;
-			document.getElementById("H"+i).style.top  = hourY;
-		}
-	}
-}
-setInterval("Nowtime()",1000);/* himajin.moo.jp */
-</SCRIPT>
 
 <!-- ---------------------------------
 日よって文字を変える
 ---------------------------------- -->
 <SCRIPT LANGUAGE="JavaScript">
-<!--
 m = (new Date()).getMonth() + 1;
 d = (new Date()).getDate();
 if     ((m ==  1) && (d >=  1) && (d <= 7 )) document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>A Happy New Year!!</DIV>")
@@ -180,8 +46,137 @@ else if((m == 10) && (d ==  2))              document.write("<DIV ID='fusion' ST
 else if((m == 12) && (d == 24))              document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>Marry X'mas eve!</DIV>")
 else if((m == 12) && (d == 25))              document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>Marry X'mas!!</DIV>")
 else                                         document.write("<DIV ID='fusion' STYLE='width:100%;font-size:30pt;font-family:Arial;color:#ff3300;font-weight:bold;text-align:center;filter:wave(freq=10,lightatrength=0,phase=100);'>Welcome</DIV>")
-//-->
 </SCRIPT>
+
+  <!-- マウス追従アニメ画像 -->
+  <img src="heli_le.gif" id="img1">
+  <img src="heli_ri.gif" id="img2">
+
+  <script>
+    // 背景スクロール
+    let bgY = 0;
+    function BGscroll() {
+      bgY -= 1;
+      document.body.style.backgroundPosition = `0px ${bgY}px`;
+    }
+
+    // マウス追従アニメ
+    let x = 0, y = 0, oldx = 0;
+    function heli_move(event) {
+      oldx = x;
+      x = event.clientX;
+      y = event.clientY;
+
+      const img1 = document.getElementById("img1");
+      const img2 = document.getElementById("img2");
+
+      if (oldx <= x) {
+        img1.style.visibility = "hidden";
+        img2.style.visibility = "visible";
+        img2.style.left = (x - 40 + window.scrollX) + "px";
+        img2.style.top = (y + 10 + window.scrollY) + "px";
+      } else {
+        img1.style.visibility = "visible";
+        img2.style.visibility = "hidden";
+        img1.style.left = (x + 10 + window.scrollX) + "px";
+        img1.style.top = (y + 10 + window.scrollY) + "px";
+      }
+    }
+
+    // 時計設定
+    const centerx = 480, centery = 290;
+    const diamete = 100;
+    const Hspan = 10, Mspan = 10, Sspan = 10;
+    const Hsize = 14, Msize = 10, Ssize = 8;
+    const Hcolor = "#9900ff", Mcolor = "#cc00ff", Scolor = "#000000";
+    const mojicolor = "#0000ff", mojisize = 24;
+    const encolor = "#77ffff", ensize = 250;
+    const tencolor = "#0000ff", tensize = 24;
+
+    function createDot(id, size, color) {
+      const dot = document.createElement("div");
+      dot.id = id;
+      dot.className = "dot";
+      dot.style.fontSize = size + "px";
+      dot.style.color = color;
+      dot.textContent = "●";
+      document.body.appendChild(dot);
+    }
+
+    function drawClockFace() {
+      // 背景円
+      createDot("background", ensize, encolor);
+      document.getElementById("background").style.left = centerx + "px";
+      document.getElementById("background").style.top = (centery-12) + "px";
+
+      // 数字
+      for (let i = 0; i < 12; i++) {
+        const angle = Math.PI * 2 / 12 * i - Math.PI / 2; // ← ここがポイント！
+        const x = centerx + Math.cos(angle) * diamete;
+        const y = centery + Math.sin(angle) * diamete;
+        const num = document.createElement("div");
+        num.className = "dot";
+        num.style.fontSize = mojisize + "px";
+        num.style.color = mojicolor;
+        num.style.left = x + "px";
+        num.style.top = y + "px";
+        // num.innerHTML = `<b>${i + 1}</b>`;
+        num.innerHTML = `<b>${(i === 0 ? 12 : i)}</b>`;
+        document.body.appendChild(num);
+      }
+
+      // 中心点
+      createDot("center", tensize, tencolor);
+      document.getElementById("center").style.left = centerx + "px";
+      document.getElementById("center").style.top = centery + "px";
+
+      // 針の点
+      for (let i = 0; i < 10; i++) {
+        createDot("M" + i, Msize, Mcolor);
+        createDot("S" + i, Ssize, Scolor);
+        if (i < 7) createDot("H" + i, Hsize, Hcolor);
+      }
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const S = now.getSeconds();
+      const M = now.getMinutes();
+      const H = now.getHours() % 12 + M / 60;
+
+      for (let i = 0; i < 10; i++) {
+const sAngle = Math.PI * 2 / 60 * S - Math.PI / 2;
+const mAngle = Math.PI * 2 / 60 * M - Math.PI / 2;
+        const mX = centerx + Math.cos(mAngle) * (i * Mspan + Mspan);
+        const mY = centery + Math.sin(mAngle) * (i * Mspan + Mspan);
+        const sX = centerx + Math.cos(sAngle) * (i * Sspan + Sspan);
+        const sY = centery + Math.sin(sAngle) * (i * Sspan + Sspan);
+
+        document.getElementById("M" + i).style.left = mX + "px";
+        document.getElementById("M" + i).style.top = mY + "px";
+        document.getElementById("S" + i).style.left = sX + "px";
+        document.getElementById("S" + i).style.top = sY + "px";
+
+        if (i < 7) {
+const hAngle = Math.PI * 2 / 12 * H - Math.PI / 2;
+          const hX = centerx + Math.cos(hAngle) * (i * Hspan + Hspan);
+          const hY = centery + Math.sin(hAngle) * (i * Hspan + Hspan);
+          document.getElementById("H" + i).style.left = hX + "px";
+          document.getElementById("H" + i).style.top = hY + "px";
+        }
+      }
+    }
+
+// 初期化（すべてまとめる！）
+    window.onload = function () {
+      drawClockFace();
+      updateClock();
+      setInterval(updateClock, 1000);
+      setInterval(BGscroll, 50);
+      document.onmousemove = heli_move;
+    };
+</SCRIPT>
+
 <center>
 <h1>Zero1962's Room on @Nifty</h1>
 <!-- ---------------------------------
