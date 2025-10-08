@@ -1,0 +1,351 @@
+#VRML V2.0 utf8
+
+#------------------------------------
+#
+# Suzuka Revers Circuit 2015.12.26 sat Kuniyuki.Tsujimoto
+#
+#------------------------------------
+NavigationInfo {
+	headlight TRUE
+	type ["EXAMINE","ANY"]
+}
+
+DirectionalLight {
+	intensity 0.8
+	ambientIntensity 0.200000
+	color 1.000000 1.000000 1.000000
+	direction -0.571429 -0.527605 -0.628571
+}
+
+Background {
+  skyAngle [ 0.785  1.3  1.57  2.07 ]
+  skyColor [ 0.5 0.8 0.8, 0.6 0.9 0.9, 0.7 1 1, 0.8 1 1, 1 1 1 ] 
+  groundAngle [ 0.35  0.785  1.50  1.57 ]    #ground --> horizon
+  groundColor [0.1 0.2 0.3, 0.2 0.3 0.4, 0.2 0.3 0.4, 0.2 0.3 0.4, 0.3 0.4 0.5] 
+}
+
+#-----------------------------------------------------------
+Group
+{
+  children
+  [
+      DEF Timer1 TimeSensor
+    {
+      cycleInterval 10.0
+      loop TRUE
+    },
+
+    DEF Rot1 OrientationInterpolator
+    {
+      key [0.0, 0.1, 0.2, 0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9, 1.0]
+      keyValue
+      [
+          0    1   0    2.90,
+          0    1   0    3.90,
+          0    1   0    4.50
+          0    1   0    5.50,
+          0    1   0    5.90,
+          0    1   0    0.00,
+          0    1   0    0.50,
+          0    1   0    1.90,
+          0    1   0    2.10,
+      ]
+    }
+
+    DEF Pos1 PositionInterpolator
+    {
+      key [0.0, 0.1, 0.2, 0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9, 1.0, 1.1]
+      keyValue
+      [
+         34    4.2   0,
+         33    4.2   90,
+        -62    4.2   220,
+        -380   4.2   60,
+        -430   4.2    -80,
+        -450   4.2    -85,
+        -480   4.2    -80,
+        -450   4.2   60,
+        -430   4.2  100.0,
+        -440   4.2  200.0,
+        -600   4.2  400.0,
+      ]
+    }
+
+    DEF z52t Transform
+    {
+      scale 0.7 0.7 0.7
+
+      children
+      [
+	Inline
+        {
+	  url "GTR-BLUE.wrl"
+	}
+      ]
+    }
+  ]
+}
+
+ROUTE Timer1.fraction_changed TO Rot1.set_fraction
+ROUTE Timer1.fraction_changed TO Pos1.set_fraction
+ROUTE Rot1.value_changed TO z52t.set_rotation
+ROUTE Pos1.value_changed TO z52t.set_translation
+#-----------------------------------------------------------
+Group
+{
+  children
+  [
+      DEF Timer2 TimeSensor
+    {
+      cycleInterval 30.0
+      loop TRUE
+    },
+    
+    DEF Rot2 OrientationInterpolator
+    {
+      key [0.0, 0.25, 0.5, 0.75, 1.0]
+      keyValue
+      [ 
+        0 1 0 0.0,
+        0 1 0 1.57,
+        0 1 0 3.14,
+        0 1 0 4.71,
+        0 1 0 6.28
+      ]
+    }
+    
+    DEF AirCraft Transform
+    {
+      translation 0 250 0
+      rotation  0.0 0.0 0.0 0.0
+      center 500.0 500.0 0.0
+      scale 1.0 1.0 1.0
+
+      children
+      [
+	Inline
+        {
+	  url "bo-105.wrl"
+	}   
+      ]
+    }
+  ]
+}
+
+ROUTE Timer2.fraction_changed TO Rot2.set_fraction
+ROUTE Rot2.value_changed TO AirCraft.set_rotation
+#-----------------------------------------------------------
+Group
+{
+  children
+  [
+    DEF kobe Transform
+    {
+      translation 0 0 0
+      rotation  0.0 0.0 0.0 0.0
+      scale 1.0 1.0 -1.0
+
+      children
+      [
+	Inline
+        {
+	  url "Suzuka_pc2.wrl"
+	}
+      ]
+    }
+  ]
+}
+
+Group
+{
+  children
+  [
+    DEF fence(0x10)_0810_pc2 Transform
+    {
+      translation 600.00 0.00 612.50
+      rotation  0.0 0.0 0.0 0.0
+      scale 1.0 1.0 -1.0
+
+      children
+      [
+	Inline
+        {
+	  url "fence(0x10)_0810_pc2.wrl"
+	}
+      ]
+    }
+  ]
+}
+
+#-------------------Ter--------------
+Group
+{
+  children
+  [
+    DEF m01_3x5_1_ter Transform
+    {
+      translation -683.87 0.00 490.23
+      rotation  -0.58875 0.0 0.0 0.0
+      scale 1.0 1.0 1.0
+
+      children
+      [
+	Inline
+        {
+	  url "m01_3x5_1_ter.wrl"
+	}
+      ]
+    }
+  ]
+}
+# POS  -6144/65536*6.28 = ? = -0.58875  0 0
+
+Group
+{
+  children
+  [
+    DEF m01_3x5_2_ter Transform
+    {
+      translation -1199.00 0.00 -161.76
+      rotation  0.0 0.0 0.0 0.0
+      scale 1.0 1.0 1.0
+
+      children
+      [
+	Inline
+        {
+	  url "m01_3x5_2_ter.wrl"
+	}
+      ]
+    }
+  ]
+}
+
+Group
+{
+  children
+  [
+    DEF m01_3x5_3_ter Transform
+    {
+      translation -611.62 0.00 -1324.64
+      rotation  1.29536499 0.0 0.0 0.0
+      scale 1.0 1.0 1.0
+
+      children
+      [
+	Inline
+        {
+	  url "m01_3x5_3_ter.wrl"
+	}
+      ]
+    }
+  ]
+}
+# POS  13518/65536*6.28 = ? = 1.29536499  0 0
+
+Group
+{
+  children
+  [
+    DEF m01_3x5_4_ter Transform
+    {
+      translation -1474.22 0.00 -511.25
+      rotation  -0.3925 0.0 0.0 0.0
+      scale 1.0 1.0 1.0
+
+      children
+      [
+	Inline
+        {
+	  url "m01_3x5_4_ter.wrl"
+	}
+      ]
+    }
+  ]
+}
+# POS  -4096/65536*6.28 = ? = -0.3925  0 0
+
+Group
+{
+  children
+  [
+    DEF m01_3x5_4_ter Transform
+    {
+      translation -931.26 0.00 528.56
+      rotation  -1.49123169 0.0 0.0 0.0
+      scale 1.0 1.0 1.0
+
+      children
+      [
+	Inline
+        {
+	  url "m01_3x5_4_ter.wrl"
+	}
+      ]
+    }
+  ]
+}
+# POS  -15562/65536*6.28 = ? = -1.49123169  0 0
+
+Group
+{
+  children
+  [
+    DEF m01_3x5_3_ter Transform
+    {
+      translation 1209.44 0.00 838.04
+      rotation  1.51116333 0.0 0.0 0.0
+      scale 1.0 1.0 1.0
+
+      children
+      [
+	Inline
+        {
+	  url "m01_3x5_3_ter.wrl"
+	}
+      ]
+    }
+  ]
+}
+# POS  15770/65536*6.28 = ? = 1.51116333  0 0
+
+Group
+{
+  children
+  [
+    DEF m01_3x5_2_ter Transform
+    {
+      translation 1469.40 0.00 708.06
+      rotation  -1.76625 0.0 0.0 0.0
+      scale 1.0 1.0 1.0
+
+      children
+      [
+	Inline
+        {
+	  url "m01_3x5_2_ter.wrl"
+	}
+      ]
+    }
+  ]
+}
+# POS  -18432/65536*6.28 = ? = -1.76625  0 0
+
+
+#-------------------Camera0--------------
+DEF OB_Camera0 Transform {
+	translation 600.00 0.00 612.50
+	rotation 0.0 0.0 0.0 0.0
+	scale 1.0 1.0 1.0
+	children [
+		DEF Camera Viewpoint {
+			description "fence(0x10)_0810" 
+			position 0.0 100.0 400.0
+			orientation 0.0 1.0 0.0 0.0
+			fieldOfView 0.661
+		}
+		
+	]
+}
+
+#-------------------END--------------

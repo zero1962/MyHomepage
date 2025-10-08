@@ -1,0 +1,807 @@
+﻿<!-- ----------------------------------------------------------------------- -->
+<HTML>
+<HEAD>
+<title>vrml</title>
+</HEAD>
+<BODY BGCOLOR="#00ff7f">
+<!-- ----------------------------------------------------------------------- -->
+<h3>【VACM】VRML AirCraft Museum</h3>
+<h1>VRMLエアクラフト博物館</h1>
+<br>
+入館料無料のVRML博物館にようこそ！<br>
+当館の趣旨は、航空機の知識、３次元モデルの面白さ、
+そしてVRMLの存在価値を再確認するためのサイトです。
+<br>
+VRMLはもう２０年以上まえに覚えた言語ですが、規格はxmlを用いたx3dに
+見直されました。
+しかし、その応用データはあまり見られず、インターネット・ブラウザの機能
+から(VRML2.0ビューア)消え去ってしましました。
+VRMLでは、下記に紹介するアプリを使えば、iPhone/iPadでも気軽に閲覧することが
+できます。<br>
+<br>
+ここに登録されたモデルでのフライトシミュレーションにご興味のある方は、
+トップページから、２項：フライトシミュレータをのぞいてみてください。
+<br>
+では、VRMLの３次元データをお楽しみください。<br>
+　　　　　　　　　　　　　　             ニックネーム： zero1962　2015.11.27<br>
+<hr>
+<h1>目次</h1>
+<LI><a href="#p01" >概要</a><br>
+<LI><a href="#p02" >3Dシミュレータ</a><br>
+<LI><a href="#p03" >太陽系</a><br>
+<LI><a href="#p04" >民間機</a><br>
+<LI><a href="#p05" >ヘリコプター</a><br>
+<LI><a href="#p06" >第二次世界大戦機</a><br>
+<LI><a href="#p07" >第一次世界大戦機</a><br>
+<LI><a href="#p08" >ＵＳＡ</a><br>
+<LI><a href="#p09" >ＥＵＲＯ</a><br>
+<LI><a href="#p10" >ＲＵＳＳＩＡ</a><br>
+<LI><a href="#p11" >ＪＳＤＦ</a><br>
+<LI><a href="#p12" >戦車/TANK</a><br>
+<LI><a href="#p13" >ＳＰＡＣＥ</a><br>
+<LI><a href="#p14" >ＳＦ／アニメ</a><br>
+<LI><a href="#p15" >ＣＡＲ／ｅｔｃ</a><br>
+<hr>
+<h1 id = "p01">概要</h1>
+<a href="ReadMe.txt"            >VACM 構築アイデア資料</a><br>
+<a href="AirCract_Item_List.htm">VACM 登録モデル一覧</a><br>
+<hr>
+<a href="http://www.wakayama-u.ac.jp/~tokoi/vrml/reference.html#extrusion"> VRML 概要</a><br>
+<a href="http://www.k.hosei.ac.jp/~sawa/lecture/vrml_nt/"> VRML 文法　サンプル</a><br>
+<a href="http://www.ceres.dti.ne.jp/~kekenken/main/3d/script/index.html"> VRML with JavaScript Tutorial</a><br>
+
+<hr>
+出典：<br>
+VRMLの基となる機体データは以下のサイトからいただきました。<br>
+http://mrsandj.sakura.ne.jp/ht/oranleed/<br>
+http://mrsandj.sakura.ne.jp/ht/ckp/<br>
+http://gontamix-web.hp.infoseek.co.jp/gap.htm<br>
+http://www5e.biglobe.ne.jp/~berkut/<br>
+http://elworld.s33.xrea.com/ysflight/add.html<br>
+http://cepkzspack.hp.infoseek.co.jp/Kzs%20Pack/Kzspack.html<br>
+http://flightinfo.ens.ne.jp/ysflightsim/<br>
+http://www.h4.dion.ne.jp/~tyonibu/download/cefp.html<br>
+http://tobebuta.hp.infoseek.co.jp/<br>
+http://ysfinder.net/<br>
+<br>
+複数の機体を展示しかつデモ飛行をさせるVRMLは、YSFLIGHT SIMULATOR関連ツールである
+VRML20に同梱のcorkscrew.wrlを基に作成しました。<br>
+VRML20/corkscrew.wrlは、以下に示す山川総司機長のホームページを参照しました。<br>
+http://www.ysflight.com/<br>
+<hr>
+<!-- ----------------------------------------------------------------------- -->
+VRML(Virtual Reality Modeling Language）は仮想の3次元空間 を表現する言語です。<br>
+VRMLの表示には、VRMLビューワのプラグインが必要です。<br>
+<font size="3">
+<a href="http://www.parallelgraphics.com">Parallel Graphics</a>社製の、<a href="http://www.parallelgraphics.com/products/cortona3d/download/">Cortona</a>というプラグインです。クリックするとダウンロード・サイトに移動できます。<br>
+</font>
+<HR>
+<!-- ----------------------
+<embed src="The Aircraft Museum by VRML.wrl" width=300 height=150></embed>
+<a href="The Aircraft Museum by VRML.wrl"  > </a><hr>
+------------------------------------------------ -->
+<!-- ---------------------------------------------------------------------- -->
+(1) 1 Click on the VRML<br>
+(2) 1 Click mouse R-button and You can use menu of VRML<br>
+(3) Please Push the Pageup-key or Pagedown-key for next viewpoint<br>
+<a href="The Aircraft Museum by VRML.wrl"   ><img src="ScreenShot.jpg"  width=300 height=150> デジタル・ジオラマ No.1</a><hr>
+<a href="The Aircraft Museum by VRML 2.wrl" ><img src="ScreenShot2.jpg" width=300 height=150> デジタル・ジオラマ No.2</a><hr>
+<!-- ---------------------------------------------------------------------- -->
+【すごいところ】<BR>
+・３次元表示するだけでなく、操作ができる。VRML + JavaScript の融合の成果<br>
+・gz圧縮で1/10になってもそのまま表示できる。<br>
+・コンパイル／リンク無しにすぐ実行できる。ラピットプロトタイピングに最適<br>
+・単純な図形（球、円柱、方形、錐形）だけでなく、精密描写のゲームモデルを取り込める。<br>
+・仮想ジョイステクック<br>
+・半透明ボタン操作機能、スケールスライダーが便利<br>
+<hr>
+【問題点】<BR>
+・PitchUP after RoLL が正しくない<br>
+・風景データの変換スクリプトが見つからない。<br>
+・iOS用Cortonaでは、ViewPointの変更ができない。メーカー確認済<br>
+・iOS用Cortonaでは、バックグランド色が256に減色してしまう。<br>
+・iOS用Cortonaでは、不用意にタップするとスケールが変わってしまう。<br>
+<hr>
+【やりたいこと】<BR>
+・Suzuka-DemoRun<br>
+<hr>
+<OL type="1.">
+<h1 id = "p02">【3DSim】3Dシミュレータ</h1><BR>
+
+<LI><a href="3DSim/3DSim1-zero.wrl"    >
+   <img src="3DSim/3DSim1-zero.jpg" width=300 height=150> 1File 3D Motion Simulator VRML ZeroFighter Pack</a><hr>
+<LI><a href="3DSim/3DSim1-USAF.wrl"    >
+   <img src="3DSim/3DSim1-USAF.jpg" width=300 height=150> 1File 3D Motion Simulator VRML USAF Pack</a><hr>
+<LI><a href="3DSim/3DSim1-ACRO.wrl"    >
+   <img src="3DSim/3DSim1-ACRO.jpg" width=300 height=150> 1File 3D Motion Simulator VRML ACROBAT Teams Pack</a><hr>
+<LI><a href="3DSim/3DSim1-WWII.wrl"    >
+   <img src="3DSim/3DSim1-WWII.jpg" width=300 height=150> 1File 3D Motion Simulator VRML WW Pack</a><hr>
+<LI><a href="3DSim/3DSim1-JSDF.wrl"    >
+   <img src="3DSim/3DSim1-JSDF.jpg" width=300 height=150> 1File 3D Motion Simulator VRML JSDF Pack</a><hr>
+<LI><a href="3DSim/3DSim1-SF.wrl"    >
+   <img src="3DSim/3DSim1-SF.jpg" width=300 height=150> 1File 3D Motion Simulator VRML JSDF Pack [巨大空中空母(Mother)]</a><hr>
+<LI><a href="3DSim/3DSim.wrl"    >
+   <img src="3DSim/3DSim.jpg" width=300 height=150> 3D Motion Simulator VRML と JavaScriptの組み合わせた ALL in one VRML file シミュレータ。</a><hr>
+
+【製作中】<BR>
+<LI><a href="Scenary/Suzuka-R/Suzuka.wrl"    ><img src="Scenary/Suzuka-R/Suzuka.jpg" width=300 height=150> 裏返しのスズカサーキットをスカイラインGTRで走る。</a><hr>
+
+<h1 id = "p03">【太陽系】</h1><BR>
+<LI><a href="SolarSystem/SolarSystem.wrl" ><img src="SolarSystem/SolarSystem.jpg" width=300 height=150> 太陽系</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%A4%AA%E9%99%BD%E7%B3%BB"  >    [Wiki]</a><Br>
+<LI><a href="SolarSystem/Sun/Sun.wrl"         > 太陽</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%A4%AA%E9%99%BD"  >    [Wiki]</a><Br>
+<LI><a href="SolarSystem/Mercury/Mercury.wrl" > 水星</a>
+    <a href="https://ja.wikipedia.org/wiki/%E6%B0%B4%E6%98%9F"  >    [Wiki]</a><Br>
+<LI><a href="SolarSystem/Venus/Venus.wrl"     > 金星</a>
+    <a href="https://ja.wikipedia.org/wiki/%E9%87%91%E6%98%9F"  >    [Wiki]</a><Br>
+<LI><a href="SolarSystem/Earth/Earth.wrl"     > 地球</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%9C%B0%E7%90%83"  >    [Wiki]</a><Br>
+<LI><a href="SolarSystem/Moon/Moon.wrl"       > 月</a>
+    <a href="https://ja.wikipedia.org/wiki/%E6%9C%88"  >    [Wiki]</a><Br>
+<LI><a href="SolarSystem/Mars/Mars.wrl"       > 火星</a>
+    <a href="https://ja.wikipedia.org/wiki/%E7%81%AB%E6%98%9F"  >    [Wiki]</a><Br>
+<LI><a href="SolarSystem/Jupiter/Jupiter.wrl" > 木星</a>
+    <a href="https://ja.wikipedia.org/wiki/%E6%9C%A8%E6%98%9F"  >    [Wiki]</a><Br>
+<LI><a href="SolarSystem/Saturn/Saturn.wrl"   > 土星</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%9C%9F%E6%98%9F"  >    [Wiki]</a><hr>
+
+<h1 id = "p04">【民間機】</h1><BR>
+<LI><a href="etc/WrightFlyer.wrl" ><img src="etc/WrightFlyer.jpg" width=300 height=150> WrightFlyer号</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%A9%E3%82%A4%E3%83%88%E3%83%95%E3%83%A9%E3%82%A4%E3%83%A4%E3%83%BC%E5%8F%B7"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/concorde T/concorde.wrl"  > BAe コンコルド Texture</a>
+コクピットがよくできています。<hr>
+<LI><a href="AIRLINE/concorde.wrl" ><img src="AIRLINE/concorde.jpg" width=300 height=150> BAe コンコルド</a>
+    <a href="AIRLINE/concorde_F.wrl"> [FLY]</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%82%B3%E3%83%B3%E3%82%B3%E3%83%AB%E3%83%89"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/sc01.wrl" ><img src="AIRLINE/sc01.jpg" width=300 height=150> ジャイロフルーク SC 01 スピード・カナード </a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%82%B8%E3%83%A3%E3%82%A4%E3%83%AD%E3%83%95%E3%83%AB%E3%83%BC%E3%82%AF_SC_01_%E3%82%B9%E3%83%94%E3%83%BC%E3%83%89%E3%83%BB%E3%82%AB%E3%83%8A%E3%83%BC%E3%83%89"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/Avanti.wrl" ><img src="AIRLINE/Avanti.jpg" width=300 height=150> ピアッジョ P.180 アヴァンティ </a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%94%E3%82%A2%E3%83%83%E3%82%B8%E3%83%A7_P.180_%E3%82%A2%E3%83%B4%E3%82%A1%E3%83%B3%E3%83%86%E3%82%A3"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/c172a.wrl" ><img src="AIRLINE/c172a.jpg" width=300 height=150> セスナ C172A </a>
+    <a href="AIRLINE/c172a_F.wrl"> [FLY]</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%82%BB%E3%82%B9%E3%83%8A_172"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/hondajet_r.wrl" ><img src="AIRLINE/hondajet_r.jpg" width=300 height=150> HONDA Jet </a>
+    <a href="AIRLINE/hondajet_r_F.wrl"> [FLY]</a>
+    <a href="https://ja.wikipedia.org/wiki/HondaJet"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/YS-11.wrl"         ><img src="AIRLINE/YS-11.jpg" width=300 height=150> YS-11</a>
+    <a href="https://ja.wikipedia.org/wiki/YS-11"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/b727toa.wrl">
+   <img src="AIRLINE/b727toa.jpg" width=300 height=150> Boeing 727 東亜国内航空</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%9C%E3%83%BC%E3%82%A4%E3%83%B3%E3%82%B0727"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/b744djal.wrl"    ><img src="AIRLINE/b744djal.jpg" width=300 height=150> Boeing 747 JAL</a>
+    <a href="AIRLINE/b744djal_F.wrl"> [FLY]</a>
+    <a href="AIRLINE/B747-OLDJAL.wrl"  ><img src="AIRLINE/B747JAL.jpg" width=300 height=150> Boeing 747 旧JAL</a>
+    <a href="AIRLINE/B747-OLDJAL_F.wrl"> [FLY]</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%9C%E3%83%BC%E3%82%A4%E3%83%B3%E3%82%B0747"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/b767JAL.wrl">
+   <img src="AIRLINE/b767JAL.jpg" width=300 height=150> Boeing 767 JAL</a><hr>
+
+<LI><a href="AIRLINE/b777ANA.wrl">
+   <img src="AIRLINE/b777ANA.jpg" width=300 height=150> Boeing 777 ANA</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%9C%E3%83%BC%E3%82%A4%E3%83%B3%E3%82%B0777"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/787-JAL.wrl"  ><img src="AIRLINE/787-JAL.jpg" width=300 height=150> Boeing 787 JAL</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%9C%E3%83%BC%E3%82%A4%E3%83%B3%E3%82%B0787"  >    [Wiki]</a>
+<LI><a href="AIRLINE/787-ANA.wrl"  > Boeing 787 ANA</a>
+<LI><a href="AIRLINE/787-BCA.wrl"  > Boeing 787 BCA</a><hr>
+
+<LI><a href="AIRLINE/atr72.wrl" ><img src="AIRLINE/atr72.jpg" width=300 height=150> ATR72 </a>
+    <a href="AIRLINE/atr72_F.wrl"> [FLY]</a>
+    <a href="https://ja.wikipedia.org/wiki/ATR_72"  >    [Wiki]</a><hr>
+
+<LI><a href="rv6a/rv6a2.wrl"><img src="rv6a/rv6a.jpg" width=300 height=150> VAN RV-6A</a>
+    <a href="http://wiki.flightgear.org/Van's_Aircraft_RV-6A"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/extra300.wrl" ><img src="AIRLINE/extra300.jpg" width=300 height=150> extra300 </a>
+    <a href="AIRLINE/extra300_F.wrl"> [FLY]</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%82%A8%E3%82%AF%E3%82%B9%E3%83%88%E3%83%A9_(%E8%88%AA%E7%A9%BA%E6%A9%9F%E3%83%A1%E3%83%BC%E3%82%AB%E3%83%BC)"  >    [Wiki]</a><hr>
+
+<LI><a href="AIRLINE/blue.wrl" ><img src="AIRLINE/blue.jpg" width=300 height=150> BlueIsland </a>
+    <a href="AIRLINE/blue_F.wrl"> [FLY]</a><hr>
+
+<LI><a href="AIRLINE/mu2.wrl"   ><img src="AIRLINE/mu2.jpg"   width=300 height=150> MU-2   </a>
+　　<a href="https://ja.wikipedia.org/wiki/MU-2"  >    [Wiki]</a><hr>
+<LI><a href="AIRLINE/mu300.wrl" ><img src="AIRLINE/mu300.jpg" width=300 height=150> MU-300 </a>
+　　<a href="https://ja.wikipedia.org/wiki/MU-300"  >    [Wiki]</a><hr>
+
+<LI><a href="Scenary/kobe2.wrl"    > 神戸空港上空旋回</a><hr>
+<LI><a href="Scenary/Tokyo2.wrl"   > 羽田空港上空旋回</a><hr>
+
+<h1 id = "p05">【ヘリコプター】</h1><BR>
+<LI><a href="Heli/bo-105.wrl" ><img src="Heli/bo-105.jpg" width=300 height=150> bo-105</a>
+    <a href="https://ja.wikipedia.org/wiki/MBB_Bo_105"  >    [Wiki]</a><hr>
+<LI><a href="Heli/a129.wrl" ><img src="Heli/a129.jpg" width=300 height=150> a129</a><hr>
+<LI><a href="Heli/s64e.wrl" ><img src="Heli/s64e.jpg" width=300 height=150> s64e</a><hr>
+<LI><a href="Heli/ah-6littlebird.wrl" ><img src="Heli/ah-6littlebird.jpg" width=300 height=150> ah-6littlebird</a><hr>
+
+<h1 id = "p06">【WW II】</h1><BR>
+<LI><a href="WW II/iwamoto.wrl" >
+   <img src="WW II/iwamoto.jpg" width=300 height=150></a>
+    <a href="WW II/iwamoto-F.wrl" >
+   <img src="WW II/iwamoto-F.jpg" width=300 height=150> 零戦21型 A6M2 岩本徹三</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%B2%A9%E6%9C%AC%E5%BE%B9%E4%B8%89"  >    [Wiki]</a><hr>
+<LI><a href="WW II/sakai.wrl" >
+   <img src="WW II/sakai.jpg" width=300 height=150></a>
+    <a href="WW II/sakai-F.wrl" >
+   <img src="WW II/sakai-F.jpg" width=300 height=150> 零戦21型 A6M2 坂井三郎</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%9D%82%E4%BA%95%E4%B8%89%E9%83%8E"  >    [Wiki]</a><hr>
+<LI><a href="WW II/nishizawa.wrl" >
+   <img src="WW II/nishizawa.jpg" width=300 height=150></a>
+    <a href="WW II/nishizawa-F.wrl" >
+   <img src="WW II/nishizawa-F.jpg" width=300 height=150> 零戦22型 A6M4 西澤 廣義 </a>
+    <a href="https://ja.wikipedia.org/wiki/%E8%A5%BF%E6%B2%A2%E5%BA%83%E7%BE%A9"  >    [Wiki]</a><hr>
+<LI><a href="WW II/A7M2.wrl" >
+   <img src="WW II/A7M2.jpg" width=300 height=150></a>
+    <a href="WW II/A7M2-F.wrl" >
+   <img src="WW II/A7M2-F.jpg" width=300 height=150> 烈風艦上戦闘機 A7M2　烈風 </a>
+    <a href="https://ja.wikipedia.org/wiki/%E7%83%88%E9%A2%A8"  >    [Wiki]</a><hr>
+<LI><a href="WW II/KI61.wrl" >
+   <img src="WW II/KI61.jpg" width=300 height=150></a>
+    <a href="WW II/KI61-F.wrl" >
+   <img src="WW II/KI61-F.jpg" width=300 height=150>
+   <img src="WW II/KI61-Cockpit.jpg"  width=300 height=150>
+   <img src="WW II/KI61-Cockpit2.jpg" width=300 height=150> Ki-61 3式戦 飛燕 </a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%B8%89%E5%BC%8F%E6%88%A6%E9%97%98%E6%A9%9F"  >    [Wiki]</a><hr>
+<LI><a href="WW II/F6F-5.wrl" >
+   <img src="WW II/F6F-5.jpg" width=300 height=150> グラマン F6F ヘルキャット </a>
+    <a href="https://ja.wikipedia.org/wiki/F6F_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+<LI><a href="WW II/Spitfire-mkV.wrl" >
+   <img src="WW II/Spitfire-mkV.jpg" width=300 height=150> スピットファイア mk-V </a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%82%B9%E3%83%BC%E3%83%91%E3%83%BC%E3%83%9E%E3%83%AA%E3%83%B3_%E3%82%B9%E3%83%94%E3%83%83%E3%83%88%E3%83%95%E3%82%A1%E3%82%A4%E3%82%A2"  >    [Wiki]</a><hr>
+<LI><a href="WW II/BF109G2.wrl" >
+   <img src="WW II/BF109G2.jpg" width=300 height=150> メッサーシュミット BF109G2 </a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%A1%E3%83%83%E3%82%B5%E3%83%BC%E3%82%B7%E3%83%A5%E3%83%9F%E3%83%83%E3%83%88_Bf109"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/z21.wrl"      ><img src="WW II/z21.jpg" width=300 height=150> 零戦21型 A6M2</a><hr>
+<LI><a href="WW II/z32.wrl"      ><img src="WW II/z32.jpg" width=300 height=150> 零戦32型 A6M3 HUMP</a><hr>
+<LI><a href="WW II/z22s.wrl"     ><img src="WW II/z22.jpg" width=300 height=150> 零戦22型 A6M4</a><hr>
+<LI><a href="WW II/z52.wrl"      ><img src="WW II/z52.jpg" width=300 height=150> 零戦52型 A6M5</a>
+    <a href="WW II/z52t_F.wrl"   > [FLY]</a>
+    <a href="https://ja.wikipedia.org/wiki/%E9%9B%B6%E5%BC%8F%E8%89%A6%E4%B8%8A%E6%88%A6%E9%97%98%E6%A9%9F"  >    [Wiki]</a>
+脚、プロペラなどをクリックすると変化します。<hr>
+<LI><a href="WW II/z64.wrl"      ><img src="WW II/z64.jpg" width=300 height=150> 零戦64型 A6M8</a><hr>
+
+
+<LI><a href="Zero-KT/Zero-KT.wrl"> 零戦52型(zero1962ﾊﾞｰｼﾞｮﾝ)</a>
+脚、プロペラなどをクリックすると変化します。<hr>
+
+<LI><a href="WW II/raiden.wrl" >
+   <img src="WW II/raiden.jpg" width=300 height=150> 局地戦闘機　雷電</a>
+    <a href="https://ja.wikipedia.org/wiki/%E9%9B%B7%E9%9B%BB_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/ki27.wrl" >
+   <img src="WW II/ki27.jpg" width=300 height=150> Ki-27 97式戦</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%B9%9D%E4%B8%83%E5%BC%8F%E6%88%A6%E9%97%98%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/ki-43II.wrl" >
+   <img src="WW II/ki-43II.jpg" width=300 height=150> Ki-43II　1式戦 隼</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%B8%80%E5%BC%8F%E6%88%A6%E9%97%98%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/ki44.wrl" >
+   <img src="WW II/ki44.jpg" width=300 height=150> Ki-44　2式戦 鍾馗</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%BA%8C%E5%BC%8F%E5%8D%98%E5%BA%A7%E6%88%A6%E9%97%98%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/hien.wrl"     ><img src="WW II/hien.jpg" width=300 height=150> Ki-61 3式戦 飛燕</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%B8%89%E5%BC%8F%E6%88%A6%E9%97%98%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/hayate.wrl" >
+   <img src="WW II/hayate.jpg" width=300 height=150> Ki-84　4式戦 疾風</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%9B%9B%E5%BC%8F%E6%88%A6%E9%97%98%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/type5.wrl" >
+   <img src="WW II/type5.jpg" width=300 height=150> Ki-100　5式戦</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%BA%94%E5%BC%8F%E6%88%A6%E9%97%98%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/ki83.wrl" >
+   <img src="WW II/ki83.jpg" width=300 height=150> Ki-83</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%82%AD83_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/shiden11.wrl" >
+   <img src="WW II/shiden11.jpg" width=300 height=150> 川西 N1K1-J 紫電</a>
+    <a href="https://ja.wikipedia.org/wiki/%E7%B4%AB%E9%9B%BB"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/shiden21.wrl" >
+   <img src="WW II/shiden21.jpg" width=300 height=150> 川西 N1K2-J 紫電改</a>
+    <a href="https://ja.wikipedia.org/wiki/%E7%B4%AB%E9%9B%BB%E6%94%B9"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/100tei3koug.wrl"><img src="WW II/100tei3koug.jpg" width=300 height=150> 百式司偵甲型</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%B8%80%E3%80%87%E3%80%87%E5%BC%8F%E5%8F%B8%E4%BB%A4%E9%83%A8%E5%81%B5%E5%AF%9F%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/1rk.wrl"      ><img src="WW II/1rk.jpg" width=300 height=150> 一式陸攻</a>
+    <a href="WW II/1rk_F.wrl"    > [FLY]</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%B8%80%E5%BC%8F%E9%99%B8%E4%B8%8A%E6%94%BB%E6%92%83%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/2dai.wrl"     ><img src="WW II/2dai.jpg" width=300 height=150> 二式大艇</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%BA%8C%E5%BC%8F%E9%A3%9B%E8%A1%8C%E8%89%87"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/2sui.wrl"     ><img src="WW II/2sui.jpg" width=300 height=150> 二式水戦</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%BA%8C%E5%BC%8F%E6%B0%B4%E4%B8%8A%E6%88%A6%E9%97%98%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/0suikan.wrl" >
+   <img src="WW II/0suikan.jpg" width=300 height=150> 零式水上観測機</a>
+    <a href="https://ja.wikipedia.org/wiki/%E9%9B%B6%E5%BC%8F%E8%A6%B3%E6%B8%AC%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/0suitei.wrl" >
+   <img src="WW II/0suitei.jpg" width=300 height=150> 零式水上偵察機</a>
+    <a href="https://ja.wikipedia.org/wiki/%E9%9B%B6%E5%BC%8F%E6%B0%B4%E4%B8%8A%E5%81%B5%E5%AF%9F%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/kyoufu11.wrl" >
+   <img src="WW II/kyoufu11.jpg" width=300 height=150> 強風</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%BC%B7%E9%A2%A8_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/seiran.wrl"   ><img src="WW II/seiran.jpg" width=300 height=150> 晴嵐飛行艇</a>
+    <a href="https://ja.wikipedia.org/wiki/%E6%99%B4%E5%B5%90"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/96.wrl"       ><img src="WW II/96.jpg" width=300 height=150> 九六式戦闘機</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%B9%9D%E5%85%AD%E5%BC%8F%E8%89%A6%E4%B8%8A%E6%88%A6%E9%97%98%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/97g.wrl"      ><img src="WW II/97g.jpg" width=300 height=150> 九七式艦上攻撃機</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%B9%9D%E4%B8%83%E5%BC%8F%E8%89%A6%E4%B8%8A%E6%94%BB%E6%92%83%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/tenzan.wrl" >
+   <img src="WW II/tenzan.jpg" width=300 height=150> 天山</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%A4%A9%E5%B1%B1_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/99.wrl"       ><img src="WW II/99.jpg" width=300 height=150> 九九式艦上爆撃機</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%B9%9D%E4%B9%9D%E5%BC%8F%E8%89%A6%E4%B8%8A%E7%88%86%E6%92%83%E6%A9%9F"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/b7a2.wrl"     ><img src="WW II/b7a2.jpg" width=300 height=150> 流星艦上攻撃機</a>
+    <a href="https://ja.wikipedia.org/wiki/%E6%B5%81%E6%98%9F_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/d4y2.wrl"     ><img src="WW II/d4y2.jpg" width=300 height=150> 彗星艦上爆撃機</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%BD%97%E6%98%9F_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/reppu.wrl"    ><img src="WW II/reppu.jpg" width=300 height=150> 烈風艦上戦闘機</a>
+    <a href="https://ja.wikipedia.org/wiki/%E7%83%88%E9%A2%A8"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/shinden.wrl"  ><img src="WW II/shinden.jpg" width=300 height=150> 戦闘機 震電 J1W7</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E9%9C%87%E9%9B%BB"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/shinzan.wrl" >
+   <img src="WW II/shinzan.jpg" width=300 height=150> 深山</a>
+    <a href="https://ja.wikipedia.org/wiki/%E6%B7%B1%E5%B1%B1_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/gekkou.wrl" >
+   <img src="WW II/gekkou.jpg" width=300 height=150> 月光</a>
+    <a href="https://ja.wikipedia.org/wiki/%E6%9C%88%E5%85%89_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/ouka.wrl" >
+   <img src="WW II/ouka.jpg" width=300 height=150> 桜花</a>
+    <a href="https://ja.wikipedia.org/wiki/%E6%A1%9C%E8%8A%B1_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><br>
+悲しい記憶として残す必要があると思い登録しました。
+<hr>
+
+<LI><a href="Ship/baku.wrl"   ><img src="Ship/baku.jpg" width=300 height=150> BAKU</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%90%E3%82%AF%E3%83%BC_(%E7%A9%BA%E6%AF%8D)"  >    [Wiki]</a><hr>
+
+
+<LI><a href="Ship/yamato.wrl"   ><img src="Ship/yamato.jpg" width=300 height=150> 戦艦大和</a>
+    <a href="https://ja.wikipedia.org/wiki/%E5%A4%A7%E5%92%8C_(%E6%88%A6%E8%89%A6)"  >    [Wiki]</a><hr>
+
+<LI><a href="Ship/yamato_b.wrl" > 戦艦大和(B)</a><hr>
+<LI><a href="Ship/yamato_d.wrl" > 戦艦大和(D)</a><hr>
+
+<LI><a href="Ship/ibuki.wrl"    ><img src="Ship/ibuki.jpg" width=300 height=150> 空母 伊吹</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%BC%8A%E5%90%B9_(%E7%A9%BA%E6%AF%8D)"  >    [Wiki]</a><hr>
+
+<LI><a href="Ship/shinano.wrl"  ><img src="Ship/shinano.jpg" width=300 height=150> 空母 信濃</a>
+    <a href="https://ja.wikipedia.org/wiki/%E4%BF%A1%E6%BF%83_(%E7%A9%BA%E6%AF%8D)"  >    [Wiki]</a><hr>
+
+<LI><a href="Ship/mogami.wrl"   ><img src="Ship/mogami.jpg" width=300 height=150> 巡洋艦 最上</a>
+    <a href="https://ja.wikipedia.org/wiki/%E6%9C%80%E4%B8%8A_(%E9%87%8D%E5%B7%A1%E6%B4%8B%E8%89%A6)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/b29.wrl"      ><img src="WW II/b29.jpg" width=300 height=150> B-29 ｽｰﾊﾟｰﾌｫｰﾄﾚｽ</a>
+    <a href="WW II/b29_F.wrl"    > [FLY]</a>
+　　<a href="https://ja.wikipedia.org/wiki/B-29_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/f8f.wrl" >
+   <img src="WW II/f8f.jpg" width=300 height=150> グラマン F8F ベアキャット</a>
+    <a href="https://ja.wikipedia.org/wiki/F8F_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/f7f.wrl" >
+   <img src="WW II/f7f.jpg" width=300 height=150> グラマン F7F タイガーキャット</a>
+    <a href="https://ja.wikipedia.org/wiki/F7F_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/F6F.wrl"      >
+   <img src="WW II/F6F.jpg" width=300 height=150> </a>
+　　<a href="WW II/f6f2.wrl" >
+   <img src="WW II/f6f2.jpg" width=300 height=150> グラマン F6F ヘルキャット</a>
+　　<a href="https://ja.wikipedia.org/wiki/F6F_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/f4f.wrl" >
+   <img src="WW II/f4f.jpg" width=300 height=150> グラマン F4F ワイルドキャット</a>
+    <a href="https://ja.wikipedia.org/wiki/F4F_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/f4u.wrl" >
+   <img src="WW II/f4u.jpg" width=300 height=150> チャンスボート F4U コルセア</a>
+    <a href="https://ja.wikipedia.org/wiki/F4U_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/p40.wrl" >
+   <img src="WW II/p40.jpg" width=300 height=150> カーチス P-40 ウォーホーク </a>
+    <a href="https://ja.wikipedia.org/wiki/P-40_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/p39.wrl" >
+   <img src="WW II/p39.jpg" width=300 height=150> ベル P-39 エアコブラ</a>
+    <a href="https://ja.wikipedia.org/wiki/P-39_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/p38j.wrl" >
+   <img src="WW II/p38j.jpg" width=300 height=150> P-38J ライトニング</a>
+    <a href="https://ja.wikipedia.org/wiki/P-38_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/p51d.wrl"><img src="WW II/p51d.jpg" width=300 height=150> ムスタング P-51D</a>
+　　<a href="https://ja.wikipedia.org/wiki/P-51_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/spitfire21.wrl"><img src="WW II/spitfire21.jpg" width=300 height=150> スピットファイア 21型</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%B9%E3%83%BC%E3%83%91%E3%83%BC%E3%83%9E%E3%83%AA%E3%83%B3_%E3%82%B9%E3%83%94%E3%83%83%E3%83%88%E3%83%95%E3%82%A1%E3%82%A4%E3%82%A2"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/me262a.wrl" >
+   <img src="WW II/me262a.jpg" width=300 height=150> メッサーシュミット Me262a シュワルベ </a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%A1%E3%83%83%E3%82%B5%E3%83%BC%E3%82%B7%E3%83%A5%E3%83%9F%E3%83%83%E3%83%88_Me262"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/bf109g.wrl" >
+   <img src="WW II/bf109g.jpg" width=300 height=150> メッサーシュミット BF109G</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%A1%E3%83%83%E3%82%B5%E3%83%BC%E3%82%B7%E3%83%A5%E3%83%9F%E3%83%83%E3%83%88_Bf109"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/fw190a8.wrl" >
+   <img src="WW II/fw190a8.jpg" width=300 height=150> フォッケウルフ FW190a8</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A9%E3%83%83%E3%82%B1%E3%82%A6%E3%83%AB%E3%83%95_Fw190"  >    [Wiki]</a><hr>
+
+<LI><a href="WW II/ju87d.wrl" >
+   <img src="WW II/ju87d.jpg" width=300 height=150> ユンカース Ju87d スツーカ</a>
+    <a href="https://ja.wikipedia.org/wiki/Ju_87_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<h1 id = "p07">【WW I】</h1><BR>
+<LI><a href="WW I/dh82bl.wrl"><img src="WW I/dh82bl.jpg" width=300 height=150> ﾃﾞﾊﾋﾞﾗﾝﾄ DH82</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%83%87%E3%83%BB%E3%83%8F%E3%83%93%E3%83%A9%E3%83%B3%E3%83%89_DH.82_%E3%82%BF%E3%82%A4%E3%82%AC%E3%83%BC%E3%83%BB%E3%83%A2%E3%82%B9"  >    [Wiki]</a><hr>
+<LI><a href="WW I/bristolF2Ba.wrl"><img src="WW I/bristolF2Ba.jpg" width=300 height=150> bristolF2Ba </a><hr>
+<LI><a href="WW I/camelF110.wrl"><img src="WW I/camelF110.jpg" width=300 height=150>     camelF110 </a><hr>
+<LI><a href="WW I/Dox.wrl"><img src="WW I/Dox.jpg" width=300 height=150>                 Dox </a><hr>
+<LI><a href="WW I/Dr1.wrl"><img src="WW I/Dr1.jpg" width=300 height=150>                 Dr1 </a><hr>
+<LI><a href="WW I/hp42.wrl"><img src="WW I/hp42.jpg" width=300 height=150>               hp42 </a><hr>
+<LI><a href="WW I/StaakenR6.wrl"><img src="WW I/StaakenR6.jpg" width=300 height=150>     StaakenR6 </a><hr>
+<LI><a href="WW I/voisin3.wrl"><img src="WW I/voisin3.jpg" width=300 height=150>         voisin3 </a><hr>
+
+<h1 id = "p08">【USA】</h1><BR>
+
+<LI><a href="USA/kc130j.wrl" ><img src="USA/kc130j.jpg" width=300 height=150> kc130j</a>
+    <a href="USA/ac130u.wrl" ><img src="USA/ac130u.jpg" width=300 height=150> ac130u</a>
+　　<a href="https://ja.wikipedia.org/wiki/AC-130"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/f35b.wrl"     ><img src="USA/f35b.jpg" width=300 height=150> F-35B</a>
+　　<a href="https://ja.wikipedia.org/wiki/F-35_(%E6%88%A6%E9%97%98%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/F-22A.wrl"    ><img src="USA/F-22A.jpg" width=300 height=150> F-22A</a>
+　　<a href="https://ja.wikipedia.org/wiki/F-22_(%E6%88%A6%E9%97%98%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/F-20A.wrl" >
+   <img src="USA/F-20A.jpg" width=300 height=150> F-20A タイガーシャーク</a><hr>
+
+<LI><a href="USA/fa18.wrl"     ><img src="USA/fa18.jpg" width=300 height=150> FA-18</a>
+    <a href="USA/f18_blueangels.wrl"     >
+   <img src="USA/f18_blueangels.jpg" width=300 height=150> F-18 BlueAngels</a>
+　　<a href="https://ja.wikipedia.org/wiki/F/A-18E/F_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/f16.wrl"      ><img src="USA/f16tb.jpg" width=300 height=150> F-16</a>
+    <a href="USA/f16_tbirds.wrl"     >
+   <img src="USA/f16_tbirds.jpg" width=300 height=150> F-16 ThunderBirds</a>
+　　<a href="https://ja.wikipedia.org/wiki/F-16_(%E6%88%A6%E9%97%98%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/F-15BN.wrl"><img src="USA/F-15BN.jpg" width=300 height=150> F-15 ﾌﾞﾗｯｸﾅｲﾂ</a>
+　　<a href="https://ja.wikipedia.org/wiki/F-15_(%E6%88%A6%E9%97%98%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/f15c-un.wrl"  > F-15c UN</a><hr>
+
+<LI><a href="USA/f14d-H.wrl" >
+   <img src="USA/f14d-H.jpg" width=300 height=150> F-14d High</a>
+    <a href="USA/f14d-L.wrl" >
+   <img src="USA/f14d-L.jpg" width=300 height=150> F-14d Law</a>
+　　<a href="https://ja.wikipedia.org/wiki/F-14_(%E6%88%A6%E9%97%98%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/tf104g.wrl"   ><img src="USA/tf104g.jpg" width=300 height=150> F-104G Textured</a>
+　　<a href="https://ja.wikipedia.org/wiki/F-104_(%E6%88%A6%E9%97%98%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/F-117A.wrl" >
+   <img src="USA/F-117A.jpg" width=300 height=150> F-117A ナイトホーク</a><hr>
+
+<LI><a href="USA/f86f.wrl"     ><img src="USA/f86f.jpg" width=300 height=150> F-86F セイバー</a>
+　　<a href="https://ja.wikipedia.org/wiki/F-86_(%E6%88%A6%E9%97%98%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/yf23.wrl"     ><img src="USA/yf-23.jpg" width=300 height=150> YF-23</a>
+　　<a href="https://ja.wikipedia.org/wiki/YF-23_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/X-29_A88-G.wrl"     ><img src="USA/X-29.jpg" width=300 height=150> X-29</a>
+    <a href="USA/X-29_A88.wrl"     > X-29 </a>
+　　<a href="https://ja.wikipedia.org/wiki/X-29"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/B-1B.wrl" >
+   <img src="USA/B-1B.jpg" width=300 height=150> B-1B ランサー</a><hr>
+
+<LI><a href="USA/B-2A.wrl" >
+   <img src="USA/B-2A.jpg" width=300 height=150> B-2A スピリット</a><hr>
+
+<LI><a href="USA/B-52.wrl" >
+   <img src="USA/B-52.jpg" width=300 height=150> B-52</a>
+    <a href="USA/B-52H.wrl" >
+   <img src="USA/B-52H.jpg" width=300 height=150> B-52H</a><hr>
+
+<LI><a href="USA/SR-71A.wrl" >
+   <img src="USA/SR-71A.jpg" width=300 height=150> SR-71A ブラックウィドウ</a><hr>
+
+<LI><a href="USA/AirForce1.wrl" ><img src="USA/AirForce1.jpg" width=300 height=150> Air Force 1 </a>
+    <a href="USA/AirForce1_F.wrl"> [FLY]</a>
+    <a href="https://ja.wikipedia.org/wiki/%E3%82%A8%E3%82%A2%E3%83%95%E3%82%A9%E3%83%BC%E3%82%B9%E3%83%AF%E3%83%B3"  >    [Wiki]</a><hr>
+
+<LI><a href="USA/rq1.wrl" ><img src="USA/rq1.jpg" width=300 height=150> RQ-1 プレデター</a>
+    <a href="https://ja.wikipedia.org/wiki/RQ-1_%E3%83%97%E3%83%AC%E3%83%87%E3%82%BF%E3%83%BC"  >    [Wiki]</a><hr>
+
+<LI><a href="etc/Weapons.wrl" ><img src="etc/Weapons.jpg" width=300 height=150> ミサイルなど</a><hr>
+
+<h1 id = "p09">【EURO】</h1><BR>
+
+<LI><a href="EURO/Rafale.wrl" ><img src="EURO/Rafale.jpg" width=300 height=150> Rafale</a><hr>
+<LI><a href="EURO/harrierGR7A.wrl" ><img src="EURO/harrierGR7A.jpg" width=300 height=150> harrierGR7A</a><hr>
+
+<LI><a href="EURO/Mirage2000.wrl" ><img src="EURO/Mirage2000.jpg" width=300 height=150></a>
+    <a href="EURO/Mirage2000F.wrl" ><img src="EURO/Mirage2000F.jpg" width=300 height=150> Mirage2000</a><hr>
+<LI><a href="EURO/j35f.wrl" ><img src="EURO/j35f.jpg" width=300 height=150> j35f</a><hr>
+<LI><a href="EURO/mrg_f1.wrl" ><img src="EURO/mrg_f1.jpg" width=300 height=150> mrg_f1</a><hr>
+<LI><a href="EURO/mrg3e.wrl" ><img src="EURO/mrg3e.jpg" width=300 height=150> mrg3e</a><hr>
+<LI><a href="EURO/kfir.wrl" ><img src="EURO/kfir.jpg" width=300 height=150> kfir</a><hr>
+<LI><a href="EURO/ef2000.wrl" ><img src="EURO/ef2000.jpg" width=300 height=150> ef2000</a><hr>
+<LI><a href="EURO/gripen.wrl" ><img src="EURO/gripen.jpg" width=300 height=150> gripen</a><hr>
+<LI><a href="EURO/al-je.wrl" ><img src="EURO/al-je.jpg" width=300 height=150> AlphaJet</a><hr>
+
+<h1 id = "p10">【Russia】</h1><BR>
+<LI><a href="Russia/su27_haruhi.wrl" ><img src="Russia/su27_haruhi.jpg" width=300 height=150> SU-27 haruhi</a><hr>
+<LI><a href="Russia/su27.wrl" ><img src="Russia/su27.jpg" width=300 height=150> su27</a><hr>
+<LI><a href="Russia/su30mk.wrl" ><img src="Russia/su30mk.jpg" width=300 height=150> SU-30mk</a><hr>
+<LI><a href="Russia/su30mki.wrl" ><img src="Russia/su30mki.jpg" width=300 height=150> su30mki</a><hr>
+<LI><a href="Russia/su33.wrl" ><img src="Russia/su33.jpg" width=300 height=150> su33</a><hr>
+<LI><a href="Russia/Su-47A.wrl" >
+   <img src="Russia/Su-47A.jpg" width=300 height=150> Su-47A</a><hr>
+<LI><a href="Russia/mig29a.wrl" ><img src="Russia/mig29a.jpg" width=300 height=150> mig29a</a><hr>
+<LI><a href="Russia/mig29b.wrl" ><img src="Russia/mig29b.jpg" width=300 height=150> mig29b</a><hr>
+
+<h1 id = "p11">【JSDF】</h1><BR>
+<LI><a href="JSDF/f2a.wrl"      > F-2A</a>
+　　<a href="https://ja.wikipedia.org/wiki/F-2_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/f2aw.wrl"     > F-2A White</a><hr>
+<LI><a href="JSDF/F-2A-525.wrl" ><img src="JSDF/F-2A-525.jpg" width=300 height=150> F-2A 525</a><hr>
+<LI><a href="Heli/sh60j.wrl"    > SH-60J</a>
+　　<a href="https://ja.wikipedia.org/wiki/SH-60J_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/RF-4EJ.wrl" >
+   <img src="JSDF/RF-4EJ.jpg" width=300 height=150> RF-4EJ</a>
+    <a href="JSDF/f4ejkai_423.wrl"><img src="JSDF/f4ejkai_423.jpg" width=300 height=150> F-4EJ改 423番機</a>
+　　<a href="https://ja.wikipedia.org/wiki/F-4_(%E6%88%A6%E9%97%98%E6%A9%9F)#.E6.97.A5.E6.9C.AC"  >    [Wiki]</a>
+
+（表示要素が多くて、回転操作がうまくできません。）
+<hr>
+
+<LI><a href="JSDF/f15j.wrl"     ><img src="JSDF/f15j.jpg" width=300 height=150> F-15J</a>
+　　<a href="https://ja.wikipedia.org/wiki/F-15J_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/f104J.wrl"    ><img src="JSDF/f104j.jpg" width=300 height=150> F-104J</a><hr>
+
+<LI><a href="JSDF/T-4.wrl"      ><img src="JSDF/T-4.jpg" width=300 height=150> T-4 ブルーインパルス</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%83%96%E3%83%AB%E3%83%BC%E3%82%A4%E3%83%B3%E3%83%91%E3%83%AB%E3%82%B9"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/T-2B.wrl" >
+   <img src="JSDF/T-2B.jpg" width=300 height=150> T-2B</a>
+    <a href="JSDF/t2_blueimpulse.wrl">
+   <img src="JSDF/t2_blueimpulse.jpg" width=300 height=150> T-2 Blueimpulse</a><hr>
+
+<LI><a href="JSDF/t33.wrl">
+   <img src="JSDF/t33.jpg" width=300 height=150> T-33</a>
+　　<a href="https://ja.wikipedia.org/wiki/T-33_(%E8%88%AA%E7%A9%BA%E6%A9%9F)#.E8.88.AA.E7.A9.BA.E8.87.AA.E8.A1.9B.E9.9A.8A.E3.81.AB.E3.81.8A.E3.81.91.E3.82.8B.E9.81.8B.E7.94.A8"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/T-2CCV.wrl" ><img src="JSDF/T-2CCV.jpg" width=300 height=150> T-2 CCV 研究機 </a>
+    <a href="JSDF/T-2CCV_F.wrl"> [FLY]</a>
+    <a href="https://ja.wikipedia.org/wiki/T-2_(%E8%88%AA%E7%A9%BA%E6%A9%9F%E3%83%BB%E6%97%A5%E6%9C%AC)#CCV.E7.A0.94.E7.A9.B6.E6.A9.9F2"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/us1a.wrl"     ><img src="JSDF/us1a.jpg" width=300 height=150> US-1 飛行艇</a>
+　　<a href="https://ja.wikipedia.org/wiki/US-1"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/t400.wrl"     >
+   <img src="JSDF/t400.jpg" width=300 height=150> T-400 (MU-300)</a>
+　　<a href="https://ja.wikipedia.org/wiki/MU-300"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/mu2.wrl"     >
+   <img src="JSDF/mu2.jpg" width=300 height=150> MU-2</a>
+　　<a href="https://ja.wikipedia.org/wiki/MU-2"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/e2c_J.wrl">
+   <img src="JSDF/e2c_J.jpg" width=300 height=150> E-2C ホークアイ</a>
+　　<a href="https://ja.wikipedia.org/wiki/E-2_(%E8%88%AA%E7%A9%BA%E6%A9%9F)#E-2C"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/P-3C.wrl">
+   <img src="JSDF/P-3C.jpg" width=300 height=150> P-3C オライオン</a>
+　　<a href="https://ja.wikipedia.org/wiki/P-3_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="JSDF/YS-11MA.wrl">
+   <img src="JSDF/YS-11MA.jpg" width=300 height=150> 海上自衛隊 YS-11</a>
+　　<a href="https://ja.wikipedia.org/wiki/YS-11"  >    [Wiki]</a><hr>
+
+<LI><a href="Heli/hss2b.wrl" >
+   <img src="Heli/hss2b.jpg" width=300 height=150> HSS-2B</a>
+    <a href="https://ja.wikipedia.org/wiki/SH-3_%E3%82%B7%E3%83%BC%E3%82%AD%E3%83%B3%E3%82%B0"  >    [Wiki]</a><hr>
+
+<LI><a href="Heli/sh60j.wrl" ><img src="Heli/sh60j.jpg"   width=300 height=150> SH-60J</a>
+    <a href="Heli/sh60j_02.wrl" ><img src="Heli/sh60j_02.jpg"   width=300 height=150> SH-60J2</a>
+    <a href="https://ja.wikipedia.org/wiki/SH-60K_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="Heli/uh60j_jasdf_m.wrl" ><img src="Heli/uh60j_jasdf_m.jpg"   width=300 height=150> UH-60J JASDF_m</a>
+    <a href="Heli/uh60j_jasdf.wrl" ><img src="Heli/uh60j_jasdf.jpg"   width=300 height=150> UH-60J JASDF</a>
+    <a href="Heli/uh60j_jmsdf.wrl" ><img src="Heli/uh60j_jmsdf.jpg"   width=300 height=150> UH-60J JMSDF</a>
+    <a href="https://ja.wikipedia.org/wiki/UH-60J_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+<LI><a href="Heli/ah64dj.wrl"><img src="Heli/ah64dj.jpg" width=300 height=150> ah64dj</a><hr>
+
+<LI><a href="JSDF/s-Gear.wrl"   ><img src="JSDF/s-Gear.jpg" width=300 height=150> 心神</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E5%85%88%E9%80%B2%E6%8A%80%E8%A1%93%E5%AE%9F%E8%A8%BC%E6%A9%9F_(%E8%88%AA%E7%A9%BA%E6%A9%9F)"  >    [Wiki]</a><hr>
+
+<LI><a href="Tank/90tk.wrl"     ><img src="Tank/90tk.jpg" width=300 height=150> 90式戦車</a>
+　　<a href="https://ja.wikipedia.org/wiki/90%E5%BC%8F%E6%88%A6%E8%BB%8A"  >    [Wiki]</a><hr>
+
+<LI><a href="Ship/carrier.wrl"  > 空母</a><hr>
+<LI><a href="Ship/takanami.wrl" ><img src="Ship/takanami.jpg" width=300 height=150> たかなみ</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%81%9F%E3%81%8B%E3%81%AA%E3%81%BF%E5%9E%8B%E8%AD%B7%E8%A1%9B%E8%89%A6"  >    [Wiki]</a><hr>
+<LI><a href="Ship/MVPP-10.wrl" ><img src="Ship/MVPP-10.jpg" width=300 height=150> ホバークラフト MVPP-10</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB:Hovercraft-MVPP10.jpg"  >    [Wiki]</a><hr>
+
+<h1 id = "p12">【TANK】</h1><BR>
+
+<LI><a href="Tank/90tk.wrl"     ><img src="Tank/90tk.jpg" width=300 height=150> 90式戦車</a>
+    <a href="Tank/type90tk_s.wrl" ><img src="Tank/type90tk_s.jpg" width=300 height=150> 90式戦車 雪中仕様</a><br>
+　　<a href="https://ja.wikipedia.org/wiki/90%E5%BC%8F%E6%88%A6%E8%BB%8A"  >    [Wiki]</a><hr>
+<LI><a href="Tank/stug3g.wrl" ><img src="Tank/stug3g.jpg" width=300 height=150> stug3g</a><hr>
+<LI><a href="Tank/panzer_iii_l.wrl"><img src="Tank/panzer_iii_l.jpg" width=300 height=150> panzer_iii_l</a><hr>
+<LI><a href="Tank/panther_g.wrl"><img src="Tank/panther_g.jpg" width=300 height=150> panther_g</a><hr>
+<LI><a href="Tank/m51.wrl"     ><img src="Tank/m51.jpg" width=300 height=150> m51</a><hr>
+<LI><a href="Tank/m4a3.wrl" ><img src="Tank/m4a3.jpg" width=300 height=150> m4a3</a><hr>
+<LI><a href="Tank/m16mgmc.wrl" ><img src="Tank/m16mgmc.jpg" width=300 height=150> m16mgmc</a><hr>
+<LI><a href="Tank/m1a2.wrl" ><img src="Tank/m1a2.jpg" width=300 height=150> m1a2</a><hr>
+<LI><a href="Tank/hohei.wrl" ><img src="Tank/hohei.jpg" width=300 height=150> 歩兵</a><hr>
+<LI><a href="Tank/sol_army2.wrl"><img src="Tank/sol_army2.jpg" width=300 height=150> sol_army2</a><hr>
+<LI><a href="Tank/sol_army4.wrl"><img src="Tank/sol_army4.jpg" width=300 height=150> sol_army4</a><hr>
+
+<LI><a href="Tank/BTR-70.wrl" ><img src="Tank/BTR-70.jpg" width=300 height=150> BTR-70</a><hr>
+<LI><a href="Tank/M113A2.wrl" ><img src="Tank/M113A2.jpg" width=300 height=150> M113A2</a><hr>
+<LI><a href="Tank/T-90S.wrl" ><img src="Tank/T-90S.jpg" width=300 height=150> T-90S</a><hr>
+
+<h1 id = "p13">【SPACE】</h1><BR>
+<LI><a href="Space/hopex.wrl"      ><img src="Space/hopex.jpg" width=300 height=150> 国産宇宙往還実験機 HOPE-X</a>
+　　<a href="https://ja.wikipedia.org/wiki/HOPE"  >    [Wiki]</a><hr>
+
+<LI><a href="Space/h2a+ML.wrl"   ><img src="Space/h2a+ML.jpg"  width=300 height=150> H-IIA ロケット 発射台</a>
+    <a href="Space/h2a-sep.wrl"  ><img src="Space/h2a-sep.jpg" width=300 height=150> H-IIA ロケット 分離状態</a>
+　　<a href="https://ja.wikipedia.org/wiki/H-IIA%E3%83%AD%E3%82%B1%E3%83%83%E3%83%88"  >    [Wiki]</a>
+ロケットをマウスでクリックすると発射台から離れます。<hr>
+
+<LI><a href="Space/ISS.wrl"      ><img src="Space/ISS.jpg" width=300 height=150> 国際宇宙ステーション ISS</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E5%9B%BD%E9%9A%9B%E5%AE%87%E5%AE%99%E3%82%B9%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3"  >    [Wiki]</a><hr>
+
+<LI><a href="Space/lunarlander.wrl"><img src="Space/lunarlander.jpg" width=300 height=150> アポロ月着陸船 LM-5</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%9D%E3%83%AD%E6%9C%88%E7%9D%80%E9%99%B8%E8%88%B9"  >    [Wiki]</a><hr>
+
+<LI><a href="Space/shuttle.wrl"><img src="Space/shuttle.jpg" width=300 height=150> スペースシャトル</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%B9%E3%83%9A%E3%83%BC%E3%82%B9%E3%82%B7%E3%83%A3%E3%83%88%E3%83%AB"  >    [Wiki]</a><hr>
+
+<h1 id = "p14">【Anime/SF】</h1><BR>
+<LI><a href="SF/mother.wrl" >
+   <img src="SF/mother.jpg" width=300 height=150> 巨大空中空母 Mother</a><hr>
+<LI><a href="SF/nabooRSS.wrl" ><img src="SF/nabooRSS.jpg" width=300 height=150> Naboo Royal SpaceShip</a><hr>
+<LI><a href="SF/r2d2.wrl"     > STARWARS R2D2</a><hr>
+<LI><a href="SF/xw.wrl" >
+   <img src="SF/xw.jpg"   width=300 height=150> X-Wing</a><hr>
+
+<LI><a href="SF/savoia21.wrl" ><img src="SF/savoia21.jpg" width=300 height=150> s21 サボイア 紅の豚</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%B5%E3%83%9C%E3%82%A4%E3%82%A2S.21%E8%A9%A6%E4%BD%9C%E6%88%A6%E9%97%98%E9%A3%9B%E8%A1%8C%E8%89%87"  >    [Wiki]</a>
+<LI><a href="SF/m33.wrl"      > M33 サボイア 紅の豚</a><hr>
+<LI><a href="SF/Curtiss.wrl" ><img src="SF/Curtiss.jpg" width=300 height=150> カーチス</a><hr>
+
+<LI><a href="SF/mawe.wrl"     ><img src="SF/mawe.jpg" width=300 height=150> メーヴェとナウシカ    </a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%83%A1%E3%83%BC%E3%83%B4%E3%82%A7"  >    [Wiki]</a>
+<LI><a href="SF/gunship.wrl"  ><img src="SF/gunship.jpg" width=300 height=150> ガンシップ</a><hr>
+
+<LI><a href="SF/tachikoma.wrl"><img src="SF/tachikoma.jpg" width=300 height=150> タチコマ</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E5%A4%9A%E8%84%9A%E6%88%A6%E8%BB%8A"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/rx78.wrl"      ><img src="SF/rx78.jpg" width=300 height=150> GUNDAM RX78</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%AC%E3%83%B3%E3%83%80%E3%83%A0_(%E6%9E%B6%E7%A9%BA%E3%81%AE%E5%85%B5%E5%99%A8)"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/mk2.wrl"      ><img src="SF/mk2.jpg" width=300 height=150> GUNDAM MkII</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%AC%E3%83%B3%E3%83%80%E3%83%A0Mk-II"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/ms05b.wrl"      ><img src="SF/ms05b.jpg" width=300 height=150> ザグI MS-05B</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%B6%E3%82%AFI"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/ms06j.wrl"      ><img src="SF/ms06j.jpg" width=300 height=150> ザグII MS-06J</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%B6%E3%82%AFII"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/WhiteBase.wrl"      ><img src="SF/WhiteBase.jpg" width=300 height=150> 木馬 ホワイトベース</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88%E3%83%99%E3%83%BC%E3%82%B9"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/Miku2.wrl"    > ミク</a><hr>
+
+<LI><a href="SF/CatBus.wrl"><img src="SF/CatBus.jpg" width=300 height=150> ねこバス</a><hr>
+<LI><a href="SF/999.wrl"><img src="SF/999.jpg" width=300 height=150> Space ship Arcadia</a><hr>
+<LI><a href="SF/arcadia.wrl"><img src="SF/arcadia.jpg" width=300 height=150> Space ship Arcadia</a><hr>
+<LI><a href="SF/SP-yamato.wrl"><img src="SF/SP-yamato.jpg" width=300 height=150> Space ship Yamato</a><hr>
+
+<LI><a href="SF/y-Gear.wrl"   ><img src="SF/y-Gear.jpg" width=300 height=150> 雪風-スーパシェルフ</a>
+<LI><a href="SF/frx00.wrl"    ><img src="SF/frx00.jpg"  width=300 height=150> 雪風-メイヴ</a>
+    <a href="SF/frx01.wrl"    ><img src="SF/frx01.jpg"  width=300 height=150> 雪風-メイヴ ラムジェット</a>
+    <a href="SF/frx01Jam.wrl" ><img src="SF/frx01Jam.jpg" width=300 height=150> 雪風-メイヴ ラムジェット Jamモード</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E9%9B%AA%E9%A2%A8_(%E6%9E%B6%E7%A9%BA%E3%81%AE%E5%85%B5%E5%99%A8)"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/yakumo_WFTC-F.wrl"><img src="SF/yakumo_WFTC-F.jpg" width=300 height=150> 戦闘機 八雲</a><hr>
+<LI><a href="SF/raven.wrl"><img src="SF/raven.jpg" width=300 height=150> 戦闘機 raven</a><hr>
+<LI><a href="SF/leliel.wrl"><img src="SF/leliel.jpg" width=300 height=150> 戦闘機 leliel</a><hr>
+<LI><a href="SF/XFA46.wrl" >
+   <img src="SF/XFA46.jpg" width=300 height=150> 戦闘機 XFA48</a><hr>
+
+<LI><a href="Ship/submarin.wrl"   ><img src="Ship/submarin.jpg"    width=300 height=150> 潜水艦 ヤマト</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%84%E3%81%BE%E3%81%A8_(%E6%B2%88%E9%BB%99%E3%81%AE%E8%89%A6%E9%9A%8A)"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/UH-001.wrl"   ><img src="SF/UH-001.jpg"    width=300 height=150> ウルトラホーク１号</a><hr>
+
+<LI><a href="SF/tb1.wrl"   ><img src="SF/tb1.jpg"    width=300 height=150> サンダーバード１号</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%B5%E3%83%B3%E3%83%80%E3%83%BC%E3%83%90%E3%83%BC%E3%83%891%E5%8F%B7"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/tb2.wrl"   ><img src="SF/tb2.jpg"    width=300 height=150> サンダーバード２号</a>
+    <a href="SF/tb2-1.wrl" ><img src="SF/tb2-1.jpg"    width=300 height=150> ジェットモグラ発進</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%B5%E3%83%B3%E3%83%80%E3%83%BC%E3%83%90%E3%83%BC%E3%83%892%E5%8F%B7"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/tb3.wrl"   ><img src="SF/tb3.jpg"    width=300 height=150> サンダーバード３号</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%82%B5%E3%83%B3%E3%83%80%E3%83%BC%E3%83%90%E3%83%BC%E3%83%893%E5%8F%B7"  >    [Wiki]</a><hr>
+
+<LI><a href="SF/g5phnx.wrl"   ><img src="SF/g5phnx.jpg"    width=300 height=150> ガッチャマン５号　ゴッドフェニックス</a>
+    <a href="SF/g5phnx_o.wrl" ><img src="SF/g5phnx_o.jpg"  width=300 height=150> Bay解放</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E7%A7%91%E5%AD%A6%E5%BF%8D%E8%80%85%E9%9A%8A%E3%82%AC%E3%83%83%E3%83%81%E3%83%A3%E3%83%9E%E3%83%B3"  >    [Wiki]</a><hr>
+
+<h1 id = "p15">【Car/Bike/etc】</h1><BR>
+<LI><a href="Car/GTR-BLUE.wrl" ><img src="Car/GTR-BLUE.jpg" width=300 height=150>  スカイライン GTR</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E6%97%A5%E7%94%A3%E3%83%BB%E3%82%B9%E3%82%AB%E3%82%A4%E3%83%A9%E3%82%A4%E3%83%B3GT-R"  >    [Wiki]</a><hr>
+
+<LI><a href="Car/288gto.wrl"   ><img src="Car/288gto.jpg" width=300 height=150> フェラーリ 288GTO</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%A9%E3%83%BC%E3%83%AA%E3%83%BB288GTO"  >    [Wiki]</a><hr>
+
+<LI><a href="Car/Mach5.wrl"   ><img src="Car/Mach5.jpg" width=300 height=150> マッハ号</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%83%E3%83%8FGoGoGo"  >    [Wiki]</a><hr>
+
+<LI><a href="Car/t2000.wrl"   ><img src="Car/t2000.jpg" width=300 height=150> t2000</a><hr>
+
+<LI><a href="etc/Rider.wrl"    > GPレーサ</a><hr>
+<LI><a href="etc/Rider2.wrl"   ><img src="etc/Rider2.jpg" width=300 height=150> GPレーサ 2</a><hr>
+
+<LI><a href="Car/kart.wrl" >
+   <img src="Car/kart.jpg" width=300 height=150> ゴーカート</a><hr>
+
+<LI><a href="etc/mlp_kz.wrl" ><img src="etc/mlp_kz.jpg"   width=300 height=150> MLP</a>
+    <a href="etc/trike_kz.wrl" ><img src="etc/trike_kz.jpg"   width=300 height=150> Trike</a><hr>
+
+<LI><a href="Ship/nmaru.wrl" ><img src="Ship/nmaru.jpg"   width=300 height=150> 日本丸</a>
+　　<a href="https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E4%B8%B8"  >    [Wiki]</a><hr>
+<!-- -------------------------------
+各３次元データの公開につきまして、作者様にはご了解の確認をとりたいのですが、
+連絡先がわかりません。著作権につきまして問題のある場合は、下記まで連絡して
+いただきたくよろしくお願いいたします。<br>
+<br>
+kuniyuki.tsujimoto1182@nifty.com　　辻本邦之<br>
+---------------------------------------- -->
+</OL>
+<!-- ----------------------------------------------------------------------- -->
+</BODY>
+</HTML>
+<!-- ----------------------------------------------------------------------- -->
