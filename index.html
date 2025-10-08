@@ -171,6 +171,7 @@ const hAngle = Math.PI * 2 / 12 * H - Math.PI / 2;
     window.onload = function () {
       drawClockFace();
       updateClock();
+      slideshow();
       setInterval(updateClock, 1000);
       setInterval(BGscroll, 50);
       document.onmousemove = heli_move;
@@ -240,7 +241,10 @@ function yugami()
     <IMG src="./jpg/0.jpg" ID=img3 onClick="picchange()" BORDTER="1" WIDTH="300" HEIGHT="200" >
 </TD>
 </TR></TABLE>
-<div id="tokei">画像No.nn 表示間隔=mm(s) --:--:--</div>
+
+
+<div id="tokei">画像No.n 表示間隔=mm(s)interval </div>
+
 <form name="form1">
 表示間隔
 <input type="button" value="+" name="b+" onClick="speeddown()")>
@@ -248,11 +252,14 @@ function yugami()
 画像No.
 <input type="text" name="t1" size="3" value="70">
 <input type="button" value="ok" name="b1" onClick="checknum(t1.value);window.open('jpg/'+t1.value+'.jpg','_brank')">
-<!-- input type="text" size="32" name="text1"  -->
+<!-- input type="text" size="32" name="text1" -->
 <input type="button" value="Zoom" name="b2" onClick="window.open('jpg/'+n+'.jpg','_brank')">
 <input type="button" value="ｱﾗｰﾑ･ｾｯﾄ" name="b3" onClick="window.open('alarm.html','Newwindow')">
 by Javascript
 </form>
+
+
+
 <FONT SIZE="6" FONT COLOR=GREEN>
 <a href="eindex.html"> Goto English Page. </a><hr>
 </FONT>
@@ -404,7 +411,7 @@ KT-47 WindRider7 1mm発泡スチレンシートと竹ひごで出来たクラフ
 </FONT>
 <hr>
 <FONT SIZE="12" FONT COLOR=GREEN>
-<a href="v/index.html"  > VRMLエアクラフト博物館 </a><br>
+<a href="http://zero1962a.world.coocan.jp/v/index.html"  > VRMLエアクラフト博物館 </a><br>
 </FONT>
 <hr>
 
